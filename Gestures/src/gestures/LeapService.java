@@ -24,7 +24,7 @@ public class LeapService implements Runnable{
         listener = new LeapServiceListener(recognizer);
         controller.addListener(listener);
         Thread thread = new Thread(new LeapService());
-        System.out.println("number running: " + numRunning);
+//        System.out.println("number running: " + numRunning);
         if(numRunning > 0){
             return;
         }
@@ -44,7 +44,6 @@ public class LeapService implements Runnable{
         System.out.println("Leap service started");
         running = true;
         while(running){
-            //System.out.println("Leap motion controller connected: " + controller.isServiceConnected());
             while(controller.isServiceConnected() && running){
             }
             while(!controller.isServiceConnected() && running){

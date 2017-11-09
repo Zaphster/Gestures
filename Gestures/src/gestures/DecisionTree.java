@@ -48,12 +48,16 @@ public class DecisionTree {
         THUMB_EXTENDED,
         PALM_NORMAL,
         //GRAB_ANGLE,  //not available on Linux
-        //PINCH_DISTANCE,
+        //PINCH_DISTANCE,  //not availabe on Linux
+        
         INDEX_DIRECTION,
         MIDDLE_DIRECTION,
         RING_DIRECTION,
         PINKY_DIRECTION,
         THUMB_DIRECTION,
+        
+        //simplifying the gesture recognition
+        /*
         INDEX_METACARPAL_DIRECTION,
         INDEX_INTERMEDIATE_DIRECTION,
         INDEX_PROXIMAL_DIRECTION,
@@ -73,6 +77,7 @@ public class DecisionTree {
         THUMB_INTERMEDIATE_DIRECTION,
         THUMB_PROXIMAL_DIRECTION,
         THUMB_DISTAL_DIRECTION
+        */
     };
     
     public static DecisionTreeNode getRoot(){
@@ -81,7 +86,7 @@ public class DecisionTree {
     
     public static void create(ArrayList<Gesture> gestureList) throws Exception{
         root = null;
-        System.out.println("creating decision tree with gestures");
+//        System.out.println("creating decision tree with gestures");
         gestureList.forEach((gesture) -> {
             System.out.println(gesture.name);
         });
@@ -136,7 +141,7 @@ public class DecisionTree {
     }
     
     private static void build(DecisionTreeNode currentNode, ArrayList<Gesture> gestureList) throws Exception{
-        System.out.println("Start of build() - Current node:" + currentNode);
+//        System.out.println("Start of build() - Current node:" + currentNode);
         if(gestureList.isEmpty()){
             return; //node will have no children.  a node with no children will return null when attempting to get its children by a valueToCheck
         }
@@ -169,7 +174,7 @@ public class DecisionTree {
                     Debugger.print("Multiple gestures ended up on this leaf.  None will be applied");
                 }
             }
-            System.out.println("   Node is now a leaf node - " + currentNode);
+//            System.out.println("   Node is now a leaf node - " + currentNode);
         } else {
             //create children
             for(Entry<Object, ArrayList<Gesture>> entry : valuesAndMatchingGestures.entrySet()){
@@ -180,12 +185,12 @@ public class DecisionTree {
                     DecisionTreeNode child = new DecisionTreeNode();
                     child.setUsedAttributes(usedAttributes);
                     currentNode.setConditionalNode(value, child);
-                    System.out.println("   Node is a branch node with children - " + currentNode);
+//                    System.out.println("   Node is a branch node with children - " + currentNode);
                     build(child, gestures);
                 } else {
                     //if no gestures are associated with this valueToCheck
                     currentNode.setConditionalNode(value, null);
-                    System.out.println("   Node has no children");
+//                    System.out.println("   Node has no children");
                 }
             }
         }
@@ -220,16 +225,10 @@ public class DecisionTree {
         return hasNonGestureNode;
     }
     
-//    public static ArrayList<DecisionTreeNode> getSearchedNodes(){
-//        return new ArrayList<>(nodeList);
-//    }
-    
     public static Gesture findGesture(Frame frame)throws Exception{
         gestureSearchBegins.trigger();
-       // System.out.println("Looking for gesture in frame " + frame);
         nodeList.clear();
         nodeList.add(root);
-//        while(nextNode != null && nextNode.isGesture() == false){
         while(nodeListHasNodeThatIsNotGesture(nodeList)){
             nextNode = nodeList.remove(0);
             hand = frame.hands().frontmost();
@@ -268,6 +267,7 @@ public class DecisionTree {
                 case THUMB_DIRECTION:
                     valueToCheck = (Vector)hand.fingers().fingerType(Finger.Type.TYPE_THUMB).get(0).direction();
                     break;
+                    /*
                 case INDEX_METACARPAL_DIRECTION:
                     valueToCheck = (Vector)hand.fingers().fingerType(Finger.Type.TYPE_INDEX).get(0).bone(Bone.Type.TYPE_METACARPAL).direction();
                     break;
@@ -325,6 +325,7 @@ public class DecisionTree {
                 case THUMB_DISTAL_DIRECTION:
                     valueToCheck = (Vector)hand.fingers().fingerType(Finger.Type.TYPE_THUMB).get(0).bone(Bone.Type.TYPE_DISTAL).direction();
                     break;
+*/
             }
             nodeList.addAll(nextNode.getNextNodesByValue(valueToCheck));
         }
@@ -341,16 +342,5 @@ public class DecisionTree {
             gesturesTooSimilar.trigger();
         }
         return null;
-//        if(nextNode != null && nextNode.isGesture()){
-//            return (Gesture)nextNode;
-//        } else {
-//            return null;
-//        }
-
     }
-    
-    public static void view(){
-
-    }
-
 }

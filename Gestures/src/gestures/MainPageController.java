@@ -8,14 +8,12 @@ package gestures;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -33,7 +31,6 @@ import javafx.stage.Stage;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.util.Callback;
 import javafx.util.converter.DefaultStringConverter;
@@ -87,19 +84,14 @@ public class MainPageController implements Initializable {
     @FXML
     private TableColumn<Map.Entry<Command, Gesture>, String> columnCommand;
  
-    
     ArrayList<User> users;
     
+    Integer profileListChangedHandlerId;
     
-    int profileListChangedHandlerId = Event.registerHandler(Event.TYPE.USER_LIST_CHANGED, (event) -> {
-         this.populateProfileList();
-    });
+    Integer currentUserChangedHandlerId;
           
-    
     String newName;
-    
     String selectedUser;
-    
     HashMap<Command, Gesture> commandAndGesture;
     ArrayList<Gesture> gestures;
     ObservableList<String> gestureCombo;
@@ -126,8 +118,6 @@ public class MainPageController implements Initializable {
         hideNewProfile();
     }
     
-   
-    
     @FXML
     private void handleStart(ActionEvent event) {
         LeapService.start(decisionTree);
@@ -136,7 +126,7 @@ public class MainPageController implements Initializable {
     
     @FXML
     private void handleNewProfile(ActionEvent event){
-      showNewProfile();      
+        showNewProfile();      
     }
     
     @FXML
@@ -145,19 +135,37 @@ public class MainPageController implements Initializable {
         UserManager.createProfile(newName);
         populateProfileList();
         selectedUser = newName;
-        comboName.getSelectionModel().select(selectedUser);
         hideNewProfile();
         UserManager.setCurrentUser(selectedUser);
-        loadSelectedUser(selectedUser);
     }
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        if(this.profileListChangedHandlerId == null){
+            profileListChangedHandlerId = Event.registerHandler(Event.TYPE.USER_LIST_CHANGED, (event) -> {
+                this.populateProfileList();
+                try {
+                    this.loadCurrentUser();
+                } catch (Exception ex) {
+                    Logger.getLogger(MainPageController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            });
+        }
+        if(this.currentUserChangedHandlerId == null){
+            currentUserChangedHandlerId = Event.registerHandler(Event.TYPE.USER_SWITCHED, (event) -> {
+                try {
+                    loadCurrentUser();
+                } catch (Exception ex) {
+                    Logger.getLogger(MainPageController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            });
+        }
         hideNewProfile();
         populateProfileList();
         setCellFactories();
         try {
-            populateTable();
+            //System.out.println("initializer for main page controller.  current user: " + UserManager.getCurrentUser());
+            loadCurrentUser();
         } catch (Exception ex) {
             Logger.getLogger(MainPageController.class.getName()).log(Level.SEVERE, null, ex);
         }   
@@ -171,7 +179,6 @@ public class MainPageController implements Initializable {
                 return new SimpleStringProperty(p.getValue().getKey().toTableString().toLowerCase());
             }
         });
-        
         
         columnGesture.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Map.Entry<Command, Gesture>, String>, ObservableValue<String>>() {
             @Override
@@ -189,7 +196,7 @@ public class MainPageController implements Initializable {
                 Entry entry = event.getRowValue();
                 Command command = (Command)entry.getKey();
                 String gestureName = event.getNewValue();
-                System.out.println("gesture: " + gestureName +  "\ncommand: " + command);
+                //System.out.println("gesture: " + gestureName +  "\ncommand: " + command);
                 try {
                     UserManager.mapGestureToCommand(gestureName, command);
                 } catch (Exception ex) {
@@ -208,31 +215,22 @@ public class MainPageController implements Initializable {
     @FXML
     public void populateTable() throws IOException, Exception{
         gestureMappingTable.getItems().clear();
-        
         gestureCombo = FXCollections.observableArrayList();
-        //hasmap data
-        commandAndGesture = UserManager.getCurrentUser().getCommandsAndGestures();
-        
-        gestures = UserManager.getCurrentUser().getGestures();
-      
+        //hashmap data
+        commandAndGesture = UserManager.getCommandsAndGestures();
+        gestures = UserManager.getGestures();
         gestures.forEach((gesture) -> {
             gestureCombo.add(gesture.name);
         });
         columnGesture.setCellFactory(ComboBoxTableCell.forTableColumn(new DefaultStringConverter(), gestureCombo));
-        
-
-        
         ObservableList<Map.Entry<Command, Gesture>> items = FXCollections.observableArrayList(commandAndGesture.entrySet());
-        
         gestureMappingTable.getItems().addAll(items);
-        
         gestureMappingTable.setEditable(true);
-    
     }
     
     
     public void populateProfileList(){ 
-        comboName.getItems().removeAll(comboName.getItems());
+        comboName.getItems().clear();
         users = UserManager.getAllUsers();
         for(User user : users){               
             comboName.getItems().add(user.getName()); 
@@ -247,6 +245,7 @@ public class MainPageController implements Initializable {
     
     public void showNewProfile(){
         profileName.setVisible(true);
+        profileName.setText("");
         btnProfileCancel.setVisible(true);
         btnProfileSave.setVisible(true); 
     }
@@ -255,13 +254,22 @@ public class MainPageController implements Initializable {
     @FXML
     private void handleComboProfile(ActionEvent event) throws IOException, Exception{
       selectedUser = (String) comboName.getSelectionModel().getSelectedItem();
-      UserManager.setCurrentUser(selectedUser);
+      if(selectedUser != null){
+        UserManager.setCurrentUser(selectedUser);
+      }
       //show the current user gesture lists
-      System.out.println(UserManager.getCurrentUser().makeJSONString());
+      //System.out.println(UserManager.getCurrentUser().makeJSONString());
     }
     
-    public void loadSelectedUser(String userSelected){
-        
+    public void loadCurrentUser() throws Exception{
+        String currentUser = UserManager.getCurrentUsername();
+        if(currentUser != null){
+            comboName.getSelectionModel().select(currentUser);
+            populateTable();
+        } else {
+            comboName.getSelectionModel().clearSelection();
+            populateTable();
+        }
     }
 
 }

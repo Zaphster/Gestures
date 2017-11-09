@@ -30,6 +30,13 @@ public class UserManager implements JSONWritableReadable {
 //    private static String baseFilepath = "." + File.separator + "src" + File.separator + "capstone2_group5" + File.separator + "Users" + File.separator;
     private static String baseFilepath = "." + File.separator + "Users" + File.separator;
     private static String managerFilepath = baseFilepath + "Manager.bin";
+    private static HashMap<Command, Gesture> defaultCommandsAndGestures;
+    static{
+        defaultCommandsAndGestures = new HashMap();
+        for(Command command : Command.values()){
+            defaultCommandsAndGestures.put(command, null);
+        }
+    }
     
     private transient ArrayList<User> users = new ArrayList<>();
     private HashMap<String, String> userFiles = new HashMap<>();
@@ -95,7 +102,7 @@ public class UserManager implements JSONWritableReadable {
         createdUser.addDetail("user", profile);
         createdUser.trigger();
         userListChanged.trigger();
-        _setCurrentUser(profile);
+//        _setCurrentUser(profile);
     }
     
     public static ArrayList<User> getAllUsers(){
@@ -167,6 +174,11 @@ public class UserManager implements JSONWritableReadable {
         return currentUser;
     }
     
+    public static String getCurrentUsername(){
+        initializeManager();
+        return manager.currentUserName;
+    }
+    
     public ArrayList<Gesture> getGesturesForCurrentUser(){
         if(currentUser == null){
             return null;
@@ -202,12 +214,40 @@ public class UserManager implements JSONWritableReadable {
         if(currentUserName.equals(user.getName())){
             currentUser = null;
             currentUserName = "";
+            switchedUser.addDetail("user", null);
+            switchedUser.trigger();
         }
         UserManager.store();
         userListChanged.trigger();
         deletedUser.addDetail("name", user);
         deletedUser.trigger();
     }
+    
+    public static ArrayList<Gesture> getGestures(){
+        initializeManager();
+        return manager._getGestures();
+    }
+    
+    private ArrayList<Gesture> _getGestures(){
+        if(currentUser != null){
+            return currentUser.getGestures();
+        } else {
+            return new ArrayList();
+        }
+    }
+    
+    public static HashMap<Command, Gesture> getCommandsAndGestures(){
+        initializeManager();
+        return manager._getCommandsAndGestures();
+    }
+    
+    private HashMap<Command, Gesture> _getCommandsAndGestures(){
+        if(currentUser != null){
+            return currentUser.getCommandsAndGestures();
+        } else {
+            return defaultCommandsAndGestures;
+        }
+    } 
     
     public static void addGestureToCurrentUser(Gesture gesture) throws Exception{
         initializeManager();

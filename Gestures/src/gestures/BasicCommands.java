@@ -48,18 +48,22 @@ public class BasicCommands implements OSControl{
     private float joyStickSensitivity = 100; //is percent
     private float padSensitivity = 500;      //is percent
     
-    private boolean useZAxis = true;
+    private boolean useZAxis = false;
     private int yPosCalibration = 500;
     
     private int handCurrentX;
     private int handCurrentY;
     private int handCurrentZ;
+    
+    private int handDeltaX;
+    private int handDeltaY;
+    private int handDeltaZ;
 
     public BasicCommands(){
             
         GraphicsDevice screenDev = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        Point pointer = MouseInfo.getPointerInfo().getLocation();
+        Point pointer = getMousePosition();
         
         try{
             
@@ -185,14 +189,15 @@ public class BasicCommands implements OSControl{
     
     private void moveStandard(){
         
-        int x_pos = Math.round(this.handCurrentX*padSensitivity/100);
-        int y_pos = Math.round(this.handCurrentY*padSensitivity/100);
-        int z_pos = Math.round(this.handCurrentZ*padSensitivity/100);
+        int x_pos = Math.round(this.handDeltaX * padSensitivity / 100);
+        int y_pos = Math.round(this.handDeltaY * padSensitivity / 100);
+        int z_pos = Math.round(this.handDeltaZ * padSensitivity / 100);
         
+        Point currentMousePosition = getMousePosition();
         if(useZAxis == true){
-            moveMouse(screenWidth + x_pos, screenHeight + z_pos);
+            moveMouse(currentMousePosition.x + x_pos, currentMousePosition.y + z_pos);
         }else{
-            moveMouse(screenWidth + x_pos, screenHeight - (y_pos - yPosCalibration));
+            moveMouse(currentMousePosition.x + x_pos, currentMousePosition.y - y_pos);
         }
            
     }
@@ -207,7 +212,7 @@ public class BasicCommands implements OSControl{
             
             if(x_pos > trackPadWindowWidth || x_pos < (-1)*trackPadWindowWidth || z_pos > trackPadWindowHeight || z_pos < (-1)*trackPadWindowHeight){
                 
-                Point pointer = MouseInfo.getPointerInfo().getLocation();
+                Point pointer = getMousePosition();
                 mousePositionX = (int)pointer.getX();
                 mousePositionY = (int)pointer.getY();
                 
@@ -273,8 +278,8 @@ public class BasicCommands implements OSControl{
                 break;
             case MOUSE_MOVE:
 //                this.moveJoyStick();
-                this.moveTrackPad();
-//                this.moveStandard();
+//                this.moveTrackPad();
+                this.moveStandard();
                 break;
             case KEY_DOWN:
                 break;
@@ -301,10 +306,17 @@ public class BasicCommands implements OSControl{
     
     @Override
     public void updateHandPosition(Integer x, Integer y, Integer z){
+        handDeltaX = x - handCurrentX;
+        handDeltaY = y - handCurrentY;
+        handDeltaZ = z - handCurrentZ;
         
-        this.handCurrentX = x;
-        this.handCurrentY = y;  
-        this.handCurrentZ = z;
+        handCurrentX = x;
+        handCurrentY = y;  
+        handCurrentZ = z;
         
+    }
+
+    private Point getMousePosition() {
+        return MouseInfo.getPointerInfo().getLocation();
     }
 }

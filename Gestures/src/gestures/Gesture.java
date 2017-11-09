@@ -202,6 +202,7 @@ public class Gesture extends DecisionTreeNode implements JSONWritableReadable{
             case THUMB_DIRECTION:
                 value = this.thumb.allowedDirection;
                 break;
+                /*
             case INDEX_METACARPAL_DIRECTION:
                 value = this.index.metacarpal.allowedDirection;
                 break;
@@ -259,6 +260,7 @@ public class Gesture extends DecisionTreeNode implements JSONWritableReadable{
             case THUMB_DISTAL_DIRECTION:
                 value = this.thumb.distal.allowedDirection;
                 break;
+*/
         }
         return value;
     }

@@ -73,6 +73,7 @@ public class DecisionTreeNode {
             case RING_DIRECTION:
             case PINKY_DIRECTION:
             case THUMB_DIRECTION:
+                /*
             case INDEX_METACARPAL_DIRECTION:
             case INDEX_INTERMEDIATE_DIRECTION:
             case INDEX_PROXIMAL_DIRECTION:
@@ -92,6 +93,7 @@ public class DecisionTreeNode {
             case THUMB_INTERMEDIATE_DIRECTION:
             case THUMB_PROXIMAL_DIRECTION:
             case THUMB_DISTAL_DIRECTION:
+                */
                 //value should be VectorRange
                 if(!value.getClass().getName().equals(VectorRange.class.getName())){
                     throw new Exception("Attribute " + attribute + " expects a VectorRange");
@@ -137,6 +139,7 @@ public class DecisionTreeNode {
             case RING_DIRECTION:
             case PINKY_DIRECTION:
             case THUMB_DIRECTION:
+                /*
             case INDEX_METACARPAL_DIRECTION:
             case INDEX_INTERMEDIATE_DIRECTION:
             case INDEX_PROXIMAL_DIRECTION:
@@ -156,6 +159,7 @@ public class DecisionTreeNode {
             case THUMB_INTERMEDIATE_DIRECTION:
             case THUMB_PROXIMAL_DIRECTION:
             case THUMB_DISTAL_DIRECTION:
+*/
                 //value should be Vector. compare against VectorRange
                 if(!value.getClass().getName().equals(Vector.class.getName())){
                     throw new Exception("Attribute " + attribute + " must be given a Vector to be compared against");

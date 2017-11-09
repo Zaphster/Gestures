@@ -7,6 +7,7 @@ package gestures;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import javafx.application.Platform;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 
@@ -32,9 +33,6 @@ public class DecisionTreeCell extends Circle {
         if(node != null){
             node.setGraphic(this);
         }
-//        this.setOnMouseClicked((event) -> {
-//            System.out.println(node);
-//        });
     }
     
     public DecisionTreeNode getData(){
@@ -61,11 +59,16 @@ public class DecisionTreeCell extends Circle {
     }
     
     public void updateColor(){
-        if(node.visited){
-            this.setFill(Paint.valueOf("green"));
-        } else {
-            this.setFill(Paint.valueOf("red"));
-        }
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                if(node.visited){
+                    setFill(Paint.valueOf("green"));
+                } else {
+                    setFill(Paint.valueOf("red"));
+                }
+            }
+        });
     }
     
 }

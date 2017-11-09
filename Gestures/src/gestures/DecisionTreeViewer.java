@@ -31,10 +31,7 @@ public class DecisionTreeViewer {
     private static Integer heightBetweenNodes;
     static{
         root.setOnMouseMoved((MouseEvent event) -> {
-//            System.out.println("mouse moved in anchorpane");
-//            System.out.println(event.getTarget());
             if(DecisionTreeCell.class.isAssignableFrom(event.getTarget().getClass())){
-//                System.out.println("found a decision tree cell")d;
                 DecisionTreeCell cell = (DecisionTreeCell)event.getTarget();
                 DecisionTreeNode data = cell.getData();
                 if(data != null){
@@ -54,7 +51,7 @@ public class DecisionTreeViewer {
     
     public static void start(){
         if(true){
-            return;
+//            return;
         }
         if (scene == null){
             scene = new Scene(root, sceneSize.x, sceneSize.y);
@@ -68,7 +65,6 @@ public class DecisionTreeViewer {
         populateTree(DecisionTree.getRoot(), treeRoot);
         determineLayerCounts(treeRoot, 1);
         heightBetweenNodes = sceneSize.y / layerCounts.keySet().size();
-        //System.out.println("height between nodes is " + heightBetweenNodes);
         viewTree(treeRoot, 1);
         stage.setScene(scene);
         stage.setResizable(false);

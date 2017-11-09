@@ -47,9 +47,12 @@ public class User implements JSONWritableReadable {
     }
     
     public void addGesture(Gesture gesture) throws Exception{
-        System.out.println("Adding gesture to user: " + gesture.name);
+//        System.out.println("Adding gesture to user: " + gesture.name);
         if(gesture == null){
             throw new Exception("Gesture was null.  Cannot add it to user's gesture list.");
+        }
+        if(gesture.name == null || gesture.name.equals("")){
+            throw new Exception("Gesture has no name.  Cannot add it to user's gesture list.");
         }
         for(Gesture gest : gestures){
             if(gest.name.equals(gesture.name)){
