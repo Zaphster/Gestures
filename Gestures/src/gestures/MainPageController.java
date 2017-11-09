@@ -31,6 +31,7 @@ import javafx.stage.Stage;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.util.Callback;
 import javafx.util.converter.DefaultStringConverter;
@@ -131,12 +132,21 @@ public class MainPageController implements Initializable {
     
     @FXML
     private void handleSaveNewProfile(ActionEvent event) throws IOException, Exception{
-        newName = profileName.getText();
-        UserManager.createProfile(newName);
-        populateProfileList();
-        selectedUser = newName;
-        hideNewProfile();
-        UserManager.setCurrentUser(selectedUser);
+       try{
+            newName = profileName.getText();
+            UserManager.createProfile(newName);
+            populateProfileList();
+            selectedUser = newName;
+            hideNewProfile();
+            UserManager.setCurrentUser(selectedUser);
+       }catch (Exception ex) {
+            Logger.getLogger(MainPageController.class.getName()).log(Level.SEVERE, null, ex);
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Create New Profile Error");
+            alert.setContentText(ex.getMessage());
+            alert.showAndWait();
+        }
     }
     
     @Override
