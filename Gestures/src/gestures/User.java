@@ -83,6 +83,20 @@ public class User implements JSONWritableReadable {
         userRemovedGesture.trigger();
     }
     
+    public void removeGesturebyGestureName(String gestureName) throws Exception{
+        Gesture gesture = null;
+        for(Gesture gest : gestures){
+            if(gest.name.equals(gestureName)){
+                gesture = gest;
+                break;
+            }
+        }
+        if(gesture == null){
+            throw new Exception("No gesture exists with name: " + gestureName);
+        }
+        removeGesture(gesture);
+    }
+    
     public void mapCommandToGesture(Command command, Gesture gesture) throws Exception{
         if(command == null){
             throw new Exception("Command was null.  Cannot map gesture to null command");
@@ -117,6 +131,8 @@ public class User implements JSONWritableReadable {
         }
         mapCommandToGesture(command, gesture);
     }
+    
+    
     
     public void removeGestureFromCommand(Command command){
         Gesture gesture = commandToGesture.get(command);

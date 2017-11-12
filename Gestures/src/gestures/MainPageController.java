@@ -68,6 +68,9 @@ public class MainPageController implements Initializable {
     private Button start;
     
     @FXML
+    private Button gestureManager;
+    
+    @FXML
     private Label testLabel;
     
     @FXML
@@ -280,6 +283,22 @@ public class MainPageController implements Initializable {
             comboName.getSelectionModel().clearSelection();
             populateTable();
         }
+    }
+    
+    @FXML
+    private void handleGestureManager(ActionEvent event) throws IOException, Exception{
+        if(event.getSource() == gestureManager){
+            if(UserManager.getCurrentUser() == null){
+                throw new Exception("A user profile must be selected before creating a new gesture.");
+            }
+            Stage stage = (Stage) gestureManager.getScene().getWindow();
+            
+            Parent gestureParent = FXMLLoader.load(getClass().getResource("GestureManager.fxml"));
+            Scene scene = new Scene(gestureParent);
+            
+            stage.setScene(scene);
+            stage.show();
+        }  
     }
 
 }
