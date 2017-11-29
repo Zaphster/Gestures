@@ -61,9 +61,12 @@
             <Font size="14.0" />
          </font>
       </Label>
-      <HBox alignment="CENTER" layoutY="603.0" prefHeight="47.0" prefWidth="820.0" style="-fx-background-color: #336699;">
+      <HBox alignment="CENTER_RIGHT" layoutY="603.0" prefHeight="47.0" prefWidth="820.0" style="-fx-background-color: #336699;">
          <children>
-            <Button  alignment="CENTER_LEFT" fx:id="deleteUserBtn" mnemonicParsing="false" onAction="#handleUserDelete" text="Delete Current User"/>
+            <Button fx:id="deleteUserBtn" alignment="CENTER_LEFT" mnemonicParsing="false" onAction="#handleUserDelete" text="Delete Current User">
+               <HBox.margin>
+                  <Insets right="320.0" />
+               </HBox.margin></Button>
 
             <Button fx:id="start" alignment="CENTER_RIGHT" contentDisplay="CENTER" mnemonicParsing="false" onAction="#handleStart" text="Begin Gesture Tracking">
                <HBox.margin>
@@ -80,7 +83,7 @@
          </children>
       </HBox>
       <Label fx:id="nameLabelTest" layoutX="456.0" layoutY="438.0" text="  " />
-      <TextField fx:id="profileName" layoutX="511.0" layoutY="84.0" promptText="New Profile Name" onAction="#handleSaveNewProfile"/>
+      <TextField fx:id="profileName" layoutX="511.0" layoutY="84.0" onAction="#handleSaveNewProfile" promptText="New Profile Name" />
       <Button fx:id="btnProfileSave" layoutX="687.0" layoutY="84.0" mnemonicParsing="false" onAction="#handleSaveNewProfile" text="Save" />
       <Button fx:id="btnProfileCancel" layoutX="747.0" layoutY="84.0" mnemonicParsing="false" onAction="#handleCancelNewProfile" text="Cancel" />
       <Label fx:id="testLabel" layoutX="199.0" layoutY="89.0" />
