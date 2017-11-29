@@ -16,11 +16,11 @@ import org.json.simple.JSONValue;
 public class GestureBone implements JSONWritableReadable{
     public static Boolean debug = Capstone2_Group5.debug;
     public Bone.Type type;
-    public VectorRange allowedDirection = new VectorRange();
+    public GestureVector allowedDirection = new GestureVector();
     
     public GestureBone(){
         //prevent calling constructor with no type
-//        allowedDirection = new VectorRange();
+//        allowedDirection = new GestureVector();
     }
             
     public GestureBone(Bone.Type type){

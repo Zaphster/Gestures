@@ -6,9 +6,8 @@
 package gestures;
 
 import java.awt.*;
-import java.awt.datatransfer.Clipboard;
 import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
+import javafx.animation.Timeline;
 
 /**
  *
@@ -31,9 +30,9 @@ public class BasicCommands implements OSControl{
     
     private Robot robot;
     
-    private int autoDelay = 50;
-    private int keyPressDelay = 250;
-    private int mouseClickDelay = 250;
+    private int autoDelay = 0;
+    private int keyPressDelay = 50;
+    private int mouseClickDelay = 50;
     private int mouseMovementDelay = 0;
     
     private int screenHeight;
@@ -46,7 +45,14 @@ public class BasicCommands implements OSControl{
     private int trackPadWindowWidth = 500;
     
     private float joyStickSensitivity = 100; //is percent
-    private float padSensitivity = 500;      //is percent
+    //private float padSensitivity = 1500;      //is percent
+    private float slow_cutoff = 10;
+    private float medium_cutoff = 20;
+    private float high_cutoff = 30;
+    private float padSensitivity_coefficient = 500;
+    private float padSensitivity_slow = 500;
+    private float padSensitivity_medium = 1500;
+    private float padSensitivity_high = 2500;
     
     private boolean useZAxis = false;
     private int yPosCalibration = 500;
@@ -58,6 +64,9 @@ public class BasicCommands implements OSControl{
     private int handDeltaX;
     private int handDeltaY;
     private int handDeltaZ;
+    private boolean handReset = true;
+    
+    private MouseMoveSmoother smoother;
 
     public BasicCommands(){
             
@@ -66,9 +75,8 @@ public class BasicCommands implements OSControl{
         Point pointer = getMousePosition();
         
         try{
-            
             robot = new Robot(screenDev);
-            
+            smoother = new MouseMoveSmoother(robot);
             robot.setAutoDelay(this.autoDelay);    
             robot.setAutoWaitForIdle(false);
             
@@ -156,11 +164,8 @@ public class BasicCommands implements OSControl{
         
     }
     
-    private void moveMouse(int x, int y){
-    
-        robot.mouseMove(x, y);
-        robot.delay(mouseMovementDelay);
-        
+    private void smoothMove(int x, int y){
+        smoother.smooth(x, y);
     }
     
     private void moveJoyStick(){
@@ -171,14 +176,14 @@ public class BasicCommands implements OSControl{
         
         if(useZAxis == true){
             
-            moveMouse(mousePositionX + x_pos, mousePositionY + z_pos);
+            smoothMove(mousePositionX + x_pos, mousePositionY + z_pos);
             
             mousePositionX = mousePositionX + x_pos;
             mousePositionY = mousePositionY + z_pos;
             
         }else{
             
-            moveMouse(mousePositionX + x_pos, mousePositionY - (y_pos-yPosCalibration));
+            smoothMove(mousePositionX + x_pos, mousePositionY - (y_pos-yPosCalibration));
             
             mousePositionX = mousePositionX + x_pos;
             mousePositionY = mousePositionY - (y_pos-yPosCalibration);
@@ -187,26 +192,52 @@ public class BasicCommands implements OSControl{
         
     }
     
-    private void moveStandard(){
-        
-        int x_pos = Math.round(this.handDeltaX * padSensitivity / 100);
-        int y_pos = Math.round(this.handDeltaY * padSensitivity / 100);
-        int z_pos = Math.round(this.handDeltaZ * padSensitivity / 100);
-        
-        Point currentMousePosition = getMousePosition();
-        if(useZAxis == true){
-            moveMouse(currentMousePosition.x + x_pos, currentMousePosition.y + z_pos);
-        }else{
-            moveMouse(currentMousePosition.x + x_pos, currentMousePosition.y - y_pos);
+    private double getPadSensitivity(){
+        double hypotenuse;
+        if(useZAxis) {
+            hypotenuse = hypotenuse(this.handDeltaX, this.handDeltaZ);
+        } else {
+            hypotenuse = hypotenuse(this.handDeltaX, this.handDeltaY);
         }
-           
+//        System.out.println("hypotenuse: " + hypotenuse);
+        return hypotenuse * padSensitivity_coefficient;
+    }
+    
+    private double distance(int x1, int y1, int x2, int y2){
+        int xDist = x2 - x1;
+        int yDist = y2 - y1;
+        return hypotenuse(xDist, yDist);
+    }
+    
+    private double hypotenuse(int x, int y){
+        int squared = (x * x) + (y * y);
+        double sqrt = Math.sqrt(squared);
+//        System.out.println("x: " + x + ", y: " + y + ", x^2 + y^2: " + squared + ", sqrt: " + sqrt);
+        return sqrt;
+    }
+    
+    private void moveStandard(){
+        double padSensitivity = getPadSensitivity();
+        int moveAmountX = (int)Math.round(this.handDeltaX * padSensitivity / 100);
+        int moveAmountY = (int)Math.round(this.handDeltaY * padSensitivity / 100);
+        int moveAmountZ = (int)Math.round(this.handDeltaZ * padSensitivity / 100);
+        
+        Point nextMousePosition = getMousePosition();
+        if(useZAxis == true){
+            nextMousePosition.x += moveAmountX;
+            nextMousePosition.y -= moveAmountZ;
+        }else{
+            nextMousePosition.x += moveAmountX;
+            nextMousePosition.y -= moveAmountY;
+        }
+        smoothMove(nextMousePosition.x, nextMousePosition.y);
     }
     
     private void moveTrackPad(){
         
-        int x_pos = Math.round(this.handCurrentX*padSensitivity/100);
-        int y_pos = Math.round(this.handCurrentY*padSensitivity/100);
-        int z_pos = Math.round(this.handCurrentZ*padSensitivity/100);
+        int x_pos = (int)Math.round(this.handCurrentX*getPadSensitivity()/100);
+        int y_pos = (int)Math.round(this.handCurrentY*getPadSensitivity()/100);
+        int z_pos = (int)Math.round(this.handCurrentZ*getPadSensitivity()/100);
         
         if(useZAxis == true){
             
@@ -217,10 +248,10 @@ public class BasicCommands implements OSControl{
                 mousePositionY = (int)pointer.getY();
                 
             }else{
-                moveMouse(mousePositionX + x_pos, mousePositionY + z_pos);
+                smoothMove(mousePositionX + x_pos, mousePositionY + z_pos);
             }
         }else{
-            moveMouse(mousePositionX + x_pos, mousePositionY - (y_pos - yPosCalibration));
+            smoothMove(mousePositionX + x_pos, mousePositionY - (y_pos - yPosCalibration));
         }
            
     }
@@ -276,11 +307,11 @@ public class BasicCommands implements OSControl{
             case MOUSE_SCROLL:
                 this.mouseScroll();
                 break;
-            case MOUSE_MOVE:
-//                this.moveJoyStick();
-//                this.moveTrackPad();
-                this.moveStandard();
-                break;
+//            case MOUSE_MOVE:
+////                this.moveJoyStick();
+////                this.moveTrackPad();
+//                this.moveStandard();
+//                break;
             case KEY_DOWN:
                 break;
             case KEY_HELD_DOWN:
@@ -306,14 +337,30 @@ public class BasicCommands implements OSControl{
     
     @Override
     public void updateHandPosition(Integer x, Integer y, Integer z){
-        handDeltaX = x - handCurrentX;
-        handDeltaY = y - handCurrentY;
-        handDeltaZ = z - handCurrentZ;
+        if(handReset){
+            handDeltaX = 0;
+            handDeltaY = 0;
+            handDeltaZ = 0;
+        } else {
+            handDeltaX = x - handCurrentX;
+            handDeltaY = y - handCurrentY;
+            handDeltaZ = z - handCurrentZ;
+        }
         
         handCurrentX = x;
         handCurrentY = y;  
         handCurrentZ = z;
-        
+        handReset = false;
+    }
+    
+    @Override
+    public void moveMouse(){
+        moveStandard();
+    }
+    
+    @Override
+    public void resetHandPosition(){
+        handReset = true;
     }
 
     private Point getMousePosition() {

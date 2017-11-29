@@ -125,6 +125,11 @@ public class MainPageController implements Initializable {
     }
     
     @FXML
+    private void handleEndGestureTracking(ActionEvent event){
+        LeapService.stop();
+    }
+    
+    @FXML
     private void handleNewProfile(ActionEvent event){
         showNewProfile();      
     }
@@ -199,6 +204,7 @@ public class MainPageController implements Initializable {
                 //System.out.println("gesture: " + gestureName +  "\ncommand: " + command);
                 try {
                     UserManager.mapGestureToCommand(gestureName, command);
+                    UserManager.readyTree();
                 } catch (Exception ex) {
                     Logger.getLogger(MainPageController.class.getName()).log(Level.SEVERE, null, ex);
                 } finally{

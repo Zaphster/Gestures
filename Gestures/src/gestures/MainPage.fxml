@@ -64,9 +64,9 @@
       <HBox alignment="CENTER_RIGHT" layoutY="603.0" prefHeight="47.0" prefWidth="820.0" style="-fx-background-color: #336699;">
          <children>
 
-            <Button fx:id="start" alignment="TOP_RIGHT" contentDisplay="CENTER" mnemonicParsing="false" onAction="#handleStart" text="Start" />
+            <Button fx:id="start" alignment="TOP_RIGHT" contentDisplay="CENTER" mnemonicParsing="false" onAction="#handleStart" text="Begin Gesture Tracking" />
 
-            <Button alignment="BASELINE_CENTER" contentDisplay="CENTER" mnemonicParsing="false" text="Cancel" textAlignment="CENTER">
+            <Button onAction="#handleEndGestureTracking" alignment="BASELINE_CENTER" contentDisplay="CENTER" mnemonicParsing="false" text="End Gesture Tracking" textAlignment="CENTER">
                <HBox.margin>
                   <Insets left="10.0" right="15.0" />
                </HBox.margin>
@@ -74,10 +74,7 @@
          </children>
       </HBox>
       <Label fx:id="nameLabelTest" layoutX="456.0" layoutY="438.0" text="  " />
-      <Button layoutX="456.0" layoutY="171.0" mnemonicParsing="false" text="Connect" />
-      <Label layoutX="456.0" layoutY="148.0" text="Your leap motion is" />
-      <Label layoutX="570.0" layoutY="148.0" prefHeight="17.0" prefWidth="33.0" />
-      <TextField fx:id="profileName" layoutX="511.0" layoutY="84.0" promptText="New Profile Name" />
+      <TextField fx:id="profileName" layoutX="511.0" layoutY="84.0" promptText="New Profile Name" onAction="#handleSaveNewProfile"/>
       <Button fx:id="btnProfileSave" layoutX="687.0" layoutY="84.0" mnemonicParsing="false" onAction="#handleSaveNewProfile" text="Save" />
       <Button fx:id="btnProfileCancel" layoutX="747.0" layoutY="84.0" mnemonicParsing="false" onAction="#handleCancelNewProfile" text="Cancel" />
       <Label fx:id="testLabel" layoutX="199.0" layoutY="89.0" />

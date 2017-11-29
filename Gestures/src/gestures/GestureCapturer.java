@@ -15,9 +15,9 @@ public class GestureCapturer implements GestureRecognizer{
     public static Boolean debug = Capstone2_Group5.debug;
     private Frame capturedFrame;
     private Frame lastFrame;
-    public static Float defaultAllowedFingerRadianRange = new Float(0.5); //about 30 degrees
-    public static Float defaultAllowedBoneRadianRange = new Float(0.7); // about 45 degrees
-    public static Float defaultAllowedPalmRadianRange = new Float(6.28); // about 360 degrees
+//    public static Float defaultAllowedFingerRadianRange = new Float(0.5); //about 30 degrees
+//    public static Float defaultAllowedBoneRadianRange = new Float(0.7); // about 45 degrees
+//    public static Float defaultAllowedPalmRadianRange = new Float(6.28); // about 360 degrees
 //    public static Float defaultAllowedGrabAngleRadianRange = new Float(0.35); // about 20 degrees
 //    private double defaultAllowedDistance = 20; // in mm
     
@@ -51,7 +51,7 @@ public class GestureCapturer implements GestureRecognizer{
         setFingerProperties(pinky, captured.pinky);
         setFingerProperties(thumb, captured.thumb);
         
-        captured.palm.allowedVector = getVectorRange(hand.palmNormal(), defaultAllowedPalmRadianRange);
+        captured.palm.allowedVector.setVector(hand.palmNormal());// = getVectorRange(hand.palmNormal());
         Event gestureCaptured = new Event(Event.TYPE.GESTURE_CAPTURED);
         gestureCaptured.addDetail("gesture", captured);
         gestureCaptured.trigger();
@@ -60,23 +60,23 @@ public class GestureCapturer implements GestureRecognizer{
         return captured;
     }
     
-    private VectorRange getVectorRange(Vector vector, float range) throws Exception{
-        return getVectorRange(vector, Double.parseDouble(Float.toString(range)));
-    }
+//    private GestureVector getVectorRange(Vector vector) throws Exception{
+//        return getVectorRange(vector);
+//    }
     
-    private VectorRange getVectorRange(Vector vector, Double range) throws Exception{
-        return new VectorRange(vector, range);
-    }
+//    private GestureVector getVectorRange(Vector vector) throws Exception{
+//        return new GestureVector(vector);
+//    }
     
     private void setFingerProperties(Finger finger, GestureFinger gestureFinger) throws Exception{
         gestureFinger.isExtended = finger.isExtended();
-        gestureFinger.allowedDirection = getVectorRange(finger.direction(), defaultAllowedFingerRadianRange);
+        gestureFinger.allowedDirection.setVector(finger.direction());// = getVectorRange(finger.direction(), defaultAllowedFingerRadianRange);
         if(!finger.type().equals(Finger.Type.TYPE_THUMB)){
-            gestureFinger.metacarpal.allowedDirection = getVectorRange(finger.bone(Bone.Type.TYPE_METACARPAL).direction(), defaultAllowedBoneRadianRange);
+            gestureFinger.metacarpal.allowedDirection.setVector(finger.bone(Bone.Type.TYPE_METACARPAL).direction());// = getVectorRange(finger.bone(Bone.Type.TYPE_METACARPAL).direction(), defaultAllowedBoneRadianRange);
         }
-        gestureFinger.intermediate.allowedDirection = getVectorRange(finger.bone(Bone.Type.TYPE_INTERMEDIATE).direction(), defaultAllowedBoneRadianRange);
-        gestureFinger.proximal.allowedDirection = getVectorRange(finger.bone(Bone.Type.TYPE_PROXIMAL).direction(), defaultAllowedBoneRadianRange);
-        gestureFinger.distal.allowedDirection = getVectorRange(finger.bone(Bone.Type.TYPE_DISTAL).direction(), defaultAllowedBoneRadianRange);
+        gestureFinger.intermediate.allowedDirection.setVector(finger.bone(Bone.Type.TYPE_INTERMEDIATE).direction());// = getVectorRange(finger.bone(Bone.Type.TYPE_INTERMEDIATE).direction(), defaultAllowedBoneRadianRange);
+        gestureFinger.proximal.allowedDirection.setVector(finger.bone(Bone.Type.TYPE_PROXIMAL).direction());// = getVectorRange(finger.bone(Bone.Type.TYPE_PROXIMAL).direction(), defaultAllowedBoneRadianRange);
+        gestureFinger.distal.allowedDirection.setVector(finger.bone(Bone.Type.TYPE_DISTAL).direction());// = getVectorRange(finger.bone(Bone.Type.TYPE_DISTAL).direction(), defaultAllowedBoneRadianRange);
     }
     
     @Override

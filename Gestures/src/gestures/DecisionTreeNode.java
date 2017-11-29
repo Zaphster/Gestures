@@ -5,15 +5,19 @@
  */
 package gestures;
 import com.leapmotion.leap.Vector;
+import java.util.logging.Logger;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.logging.Level;
 
 /**
  *
  * @author Cameron
  */
 public class DecisionTreeNode {
+//    private class 
     private HashMap<Object, DecisionTreeNode> attributeValueToOutcome;
+    
     private DecisionTree.Attribute attribute;
     private ArrayList<DecisionTree.Attribute> usedAttributes;
     public Boolean visited = false;
@@ -94,9 +98,9 @@ public class DecisionTreeNode {
             case THUMB_PROXIMAL_DIRECTION:
             case THUMB_DISTAL_DIRECTION:
                 */
-                //value should be VectorRange
-                if(!value.getClass().getName().equals(VectorRange.class.getName())){
-                    throw new Exception("Attribute " + attribute + " expects a VectorRange");
+                //value should be Vector
+                if(!value.getClass().getName().equals(GestureVector.class.getName())){
+                    throw new Exception("Attribute " + attribute + " expects a GestureVector");
                 }
                 break;
         }
@@ -115,9 +119,9 @@ public class DecisionTreeNode {
         return attributes;
     }
     
-    public ArrayList<DecisionTreeNode> getNextNodesByValue(Object value) throws Exception{
+    public HashMap<DecisionTreeNode, Double> getNextNodesByValueWithConfidence(Object value) throws Exception{
         updateVisited(true);
-        ArrayList<DecisionTreeNode> nodeList = new ArrayList<>();
+        HashMap<DecisionTreeNode, Double> nodeList = new HashMap<>();
         if(attributeValueToOutcome == null){
             return nodeList;
         }
@@ -131,7 +135,7 @@ public class DecisionTreeNode {
                 if(!value.getClass().getName().equals(Boolean.class.getName())){
                     throw new Exception("Attribute " + attribute + " must be given a boolean to be compared against");
                 }
-                nodeList.add(attributeValueToOutcome.get(value));
+                nodeList.put(attributeValueToOutcome.get(value), 100.0);
                 break;
             case PALM_NORMAL:
             case INDEX_DIRECTION:
@@ -160,15 +164,20 @@ public class DecisionTreeNode {
             case THUMB_PROXIMAL_DIRECTION:
             case THUMB_DISTAL_DIRECTION:
 */
-                //value should be Vector. compare against VectorRange
+                //value should be Vector. compare against GestureVector
                 if(!value.getClass().getName().equals(Vector.class.getName())){
                     throw new Exception("Attribute " + attribute + " must be given a Vector to be compared against");
                 }
+                
                 attributeValueToOutcome.forEach((compare, node)-> {
-                    VectorRange compareTo = (VectorRange)compare;
-                    if(compareTo.contains((Vector)value)){
-                        nodeList.add(node);
+                    GestureVector compareTo = (GestureVector)compare;
+                    try{
+                        float percentageDifference = compareTo.getPercentageDirectionComparison((Vector)value);
+                        nodeList.put(node, (double)percentageDifference);
+                    } catch (Exception e) {
+                        Logger.getLogger(DecisionTreeNode.class.getName()).log(Level.SEVERE, null, e);
                     }
+
                 });
                 break;
         }

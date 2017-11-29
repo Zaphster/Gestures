@@ -36,85 +36,85 @@ public class Gesture extends DecisionTreeNode implements JSONWritableReadable{
         palm = new GesturePalm();
     }
     
-    public Boolean performedIn(Frame frame){
-        Debugger.print("Checking if " + name + " is in frame " + frame);
-        Hand hand = frame.hands().frontmost();
-        if(hand.isValid() == false){
-            return false;
-        }
-//        System.out.println("hand " + hand);
-        Finger frameIndex = hand.fingers().fingerType(Finger.Type.TYPE_INDEX).get(0);
-//        System.out.println("index " + frameIndex);
-        Finger frameMiddle = hand.fingers().fingerType(Finger.Type.TYPE_MIDDLE).get(0);
-//        System.out.println("middle " + frameMiddle);
-        Finger frameRing = hand.fingers().fingerType(Finger.Type.TYPE_RING).get(0);
-//        System.out.println("ring " + frameRing);
-        Finger framePinky = hand.fingers().fingerType(Finger.Type.TYPE_PINKY).get(0);
-//        System.out.println("pinky " + framePinky);
-        Finger frameThumb = hand.fingers().fingerType(Finger.Type.TYPE_THUMB).get(0);
-//        System.out.println("thumb " + frameThumb);
-        if(!frameIndex.isValid() || !frameMiddle.isValid() || !frameRing.isValid() || !framePinky.isValid() || !frameThumb.isValid()){
-            return false;
-        }
-        Boolean indexCorrect = this.index.performedBy(frameIndex);
-        Debugger.print("  Index correct: " + indexCorrect);
-        Boolean middleCorrect = this.middle.performedBy(frameMiddle);
-        Debugger.print("  Middle correct: " + middleCorrect);
-        Boolean ringCorrect = this.ring.performedBy(frameRing);
-        Debugger.print("  Ring Correct: " + ringCorrect);
-        Boolean pinkyCorrect = this.pinky.performedBy(framePinky);
-        Debugger.print("  Pinky Correct: " + pinkyCorrect);
-        Boolean thumbCorrect = this.thumb.performedBy(frameThumb);
-        Debugger.print("  Thumb Correct: " + thumbCorrect);
-        Boolean palmCorrect = this.palm.allowedVector.contains(hand.palmNormal());
-        Debugger.print("  Palm correct:  " + palmCorrect);
-        
-        Boolean performed = (indexCorrect &&
-                middleCorrect &&
-                ringCorrect &&
-                pinkyCorrect &&
-                thumbCorrect &&
-                palmCorrect);
-        return performed;
+//    public Boolean performedIn(Frame frame){
+//        Debugger.print("Checking if " + name + " is in frame " + frame);
+//        Hand hand = frame.hands().frontmost();
+//        if(hand.isValid() == false){
+//            return false;
+//        }
+////        System.out.println("hand " + hand);
+//        Finger frameIndex = hand.fingers().fingerType(Finger.Type.TYPE_INDEX).get(0);
+////        System.out.println("index " + frameIndex);
+//        Finger frameMiddle = hand.fingers().fingerType(Finger.Type.TYPE_MIDDLE).get(0);
+////        System.out.println("middle " + frameMiddle);
+//        Finger frameRing = hand.fingers().fingerType(Finger.Type.TYPE_RING).get(0);
+////        System.out.println("ring " + frameRing);
+//        Finger framePinky = hand.fingers().fingerType(Finger.Type.TYPE_PINKY).get(0);
+////        System.out.println("pinky " + framePinky);
+//        Finger frameThumb = hand.fingers().fingerType(Finger.Type.TYPE_THUMB).get(0);
+////        System.out.println("thumb " + frameThumb);
+//        if(!frameIndex.isValid() || !frameMiddle.isValid() || !frameRing.isValid() || !framePinky.isValid() || !frameThumb.isValid()){
+//            return false;
+//        }
+//        Boolean indexCorrect = this.index.performedBy(frameIndex);
+//        Debugger.print("  Index correct: " + indexCorrect);
+//        Boolean middleCorrect = this.middle.performedBy(frameMiddle);
+//        Debugger.print("  Middle correct: " + middleCorrect);
+//        Boolean ringCorrect = this.ring.performedBy(frameRing);
+//        Debugger.print("  Ring Correct: " + ringCorrect);
+//        Boolean pinkyCorrect = this.pinky.performedBy(framePinky);
+//        Debugger.print("  Pinky Correct: " + pinkyCorrect);
+//        Boolean thumbCorrect = this.thumb.performedBy(frameThumb);
+//        Debugger.print("  Thumb Correct: " + thumbCorrect);
+//        Boolean palmCorrect = this.palm.allowedVector.contains(hand.palmNormal());
+//        Debugger.print("  Palm correct:  " + palmCorrect);
+//        
+//        Boolean performed = (indexCorrect &&
+//                middleCorrect &&
+//                ringCorrect &&
+//                pinkyCorrect &&
+//                thumbCorrect &&
+//                palmCorrect);
+//        return performed;
+//    }
+    
+    public void setFingerDirection(Finger.Type type, Vector newCenter) throws Exception{
+        getGestureFinger(type).allowedDirection.setVector(newCenter);
     }
     
-    public void setFingerCenter(Finger.Type type, Vector newCenter) throws Exception{
-        getGestureFinger(type).allowedDirection.setCenter(newCenter);
+    public void setFingerBoneDirection(Finger.Type fingerType, Bone.Type boneType, Vector center) throws Exception{
+        getGestureBone(fingerType, boneType).allowedDirection.setVector(center);
     }
     
-    public void setFingerBoneCenter(Finger.Type fingerType, Bone.Type boneType, Vector center) throws Exception{
-        getGestureBone(fingerType, boneType).allowedDirection.setCenter(center);
-    }
+//    public void setFingerRange(Finger.Type type, Float newRange) throws Exception{
+//        getGestureFinger(type).allowedDirection.setAllRanges(newRange);
+//    }
     
-    public void setFingerRange(Finger.Type type, Float newRange) throws Exception{
-        getGestureFinger(type).allowedDirection.setAllRanges(newRange);
-    }
+//    public void setFingerBoneRange(Finger.Type fingerType, Bone.Type boneType, Float range) throws Exception{
+//        if(!(fingerType == Finger.Type.TYPE_THUMB && boneType == Bone.Type.TYPE_METACARPAL)){
+//            getGestureBone(fingerType, boneType).allowedDirection.setAllRanges(range);
+//        }
+//    }
     
-    public void setFingerBoneRange(Finger.Type fingerType, Bone.Type boneType, Float range) throws Exception{
-        if(!(fingerType == Finger.Type.TYPE_THUMB && boneType == Bone.Type.TYPE_METACARPAL)){
-            getGestureBone(fingerType, boneType).allowedDirection.setAllRanges(range);
-        }
-    }
+//    public void setAllFingerBoneRanges(Finger.Type fingerType, Float range) throws Exception{
+//        for(Bone.Type type : Bone.Type.values()){
+//            setFingerBoneRange(fingerType, type, range);
+//        }
+//    }
     
-    public void setAllFingerBoneRanges(Finger.Type fingerType, Float range) throws Exception{
-        for(Bone.Type type : Bone.Type.values()){
-            setFingerBoneRange(fingerType, type, range);
-        }
-    }
-    
-    public void setAllHandBoneRanges(Float range) throws Exception{
-        for(Finger.Type fingerType : Finger.Type.values()){
-            setAllFingerBoneRanges(fingerType, range);
-        }
-    }
+//    public void setAllHandBoneRanges(Float range) throws Exception{
+//        for(Finger.Type fingerType : Finger.Type.values()){
+//            setAllFingerBoneRanges(fingerType, range);
+//        }
+//    }
     
     public void setPalmCenter(Vector center) throws Exception{
-        this.palm.allowedVector.setCenter(center);
+        this.palm.allowedVector.setVector(center);
     }
     
-    public void setPalmRange(Float range) throws Exception{
-        this.palm.allowedVector.setAllRanges(range);
-    }
+//    public void setPalmRange(Float range) throws Exception{
+//        this.palm.allowedVector.setAllRanges(range);
+//    }
     
     private GestureFinger getGestureFinger(Finger.Type type) throws Exception{
         GestureFinger finger;

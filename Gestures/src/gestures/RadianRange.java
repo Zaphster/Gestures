@@ -71,7 +71,7 @@ public class RadianRange implements JSONWritableReadable{
         this.range = range;
 
         // range of 0 means must be exactly on the center
-        // range of PI means can it be anywhere in the circle
+        // range of 2 PI means can it be anywhere in the circle
         lowerBound = preventNegative(center - range) % RADIANSPERCIRCLE;
         upperBound = preventNegative(center + range) % RADIANSPERCIRCLE;
     }

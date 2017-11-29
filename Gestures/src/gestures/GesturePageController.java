@@ -84,6 +84,7 @@ public class GesturePageController implements Initializable {
                     Optional<String> result = dialog.showAndWait();
                     if(result.isPresent()){
                         newGesture.name = result.get();
+                        System.out.println(newGesture);
                         UserManager.addGestureToCurrentUser(newGesture);
                     }
                 }

@@ -13,10 +13,10 @@ import org.json.simple.JSONValue;
  * @author Cameron
  */
 public class GesturePalm implements JSONWritableReadable{
-    public VectorRange allowedVector;
+    public GestureVector allowedVector;
     
     public GesturePalm(){
-        allowedVector = new VectorRange();
+        allowedVector = new GestureVector();
     }
 
     @Override

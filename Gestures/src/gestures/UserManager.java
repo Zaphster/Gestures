@@ -27,7 +27,6 @@ import org.json.simple.JSONValue;
 public class UserManager implements JSONWritableReadable {
     public static UserManager manager;
     private static final OSControl osControl = Capstone2_Group5.getOSController();
-//    private static String baseFilepath = "." + File.separator + "src" + File.separator + "capstone2_group5" + File.separator + "Users" + File.separator;
     private static String baseFilepath = "." + File.separator + "Users" + File.separator;
     private static String managerFilepath = baseFilepath + "Manager.bin";
     private static HashMap<Command, Gesture> defaultCommandsAndGestures;
@@ -97,12 +96,10 @@ public class UserManager implements JSONWritableReadable {
         }
         User profile = new User(name);
         users.add(profile);
-//        System.out.println("user profile created");
         UserManager.storeUser(profile);
         createdUser.addDetail("user", profile);
         createdUser.trigger();
         userListChanged.trigger();
-//        _setCurrentUser(profile);
     }
     
     public static ArrayList<User> getAllUsers(){
@@ -312,14 +309,18 @@ public class UserManager implements JSONWritableReadable {
     
     private void _readyTree() throws Exception{
         checkIfCurrentUserIsSet();
-        DecisionTree.create(currentUser.getGestures());
+        ArrayList<Gesture> gestures = new ArrayList<>();
+        for(Gesture gesture : currentUser.getCommandsAndGestures().values()) {
+            if(gesture != null) {
+                gestures.add(gesture);
+            }
+        }
+        DecisionTree.create(gestures);
     }
     
     public static void loadFromFile() throws Exception{
-//        System.out.println("Loading manager from file");
         manager = new UserManager();
         setObjectFromFile(manager, managerFilepath);
-//        manager = (UserManager)loadedObj;
         if(manager == null){
             throw new Exception("Manager is null? This shouldn't happen");
         }
@@ -352,7 +353,6 @@ public class UserManager implements JSONWritableReadable {
     }
     
     private static void setObjectFromFile(JSONWritableReadable blankObject, String filepath){
-//        System.out.println("setting obj from file: " + blankObject);
         FileInputStream fin = null;
         try{
             File file = new File(filepath);
@@ -363,11 +363,7 @@ public class UserManager implements JSONWritableReadable {
             byte[] b = new byte[(int)file.length()];
             fin.read(b);
             String fileContents = new String(b);
-//            System.out.println("filecontents: " + fileContents);
-//            System.out.println("read from " + filepath);
             blankObject.makeSelfFromJSON(fileContents);
-//            return blankObject;
-//            return JSONOld.makeJavaObject(fileContents);
         } catch(Exception e){
             java.util.logging.Logger.getLogger(UserManager.class.getName()).log(Level.SEVERE, null, e);
         } finally{
@@ -379,7 +375,6 @@ public class UserManager implements JSONWritableReadable {
                 }
             }
         }
-//        return null;
     }
     
     public static void storeManagerAndUsers() throws Exception{
@@ -402,7 +397,6 @@ public class UserManager implements JSONWritableReadable {
         createDirectory();
         String filepath = baseFilepath + user.getName() + ".bin";
         String toWrite = user.makeJSONString();
-//        System.out.println("writing " + toWrite + " to file: " + filepath);
         write(filepath, toWrite);
         manager.userFiles.put(user.getName(), filepath);
     }
@@ -420,7 +414,6 @@ public class UserManager implements JSONWritableReadable {
             file.createNewFile(); //only creates new file if it doesn't exist
             fout = new FileOutputStream(filepath);
             fout.write(toWrite.getBytes());
-//            System.out.println("written to " + filepath);
         }catch(Exception e){
             java.util.logging.Logger.getLogger(UserManager.class.getName()).log(Level.SEVERE, null, e);
         } finally{

@@ -20,11 +20,13 @@ public class DecisionTree {
     private static DecisionTreeNode nextNode;
     private static Object valueToCheck;
     private static Hand hand;
-    private static ArrayList<DecisionTreeNode> nodeList = new ArrayList<>();
+//    private static ArrayList<DecisionTreeNode> nodeList = new ArrayList<>();
+    private static HashMap<DecisionTreeNode, Double> nodeListAndConfidence = new HashMap<>();
     private static ArrayList<Gesture> gesturesFound = new ArrayList<>();
     private static Event gesturesTooSimilar = new Event(Event.TYPE.GESTURES_TOO_SIMILAR);
     private static Event gestureSearchBegins = new Event(Event.TYPE.FIND_GESTURE_INITIATED_IN_DECISION_TREE);
     private static int tooSimilarListener;
+    private static int gestureFoundThreshold = 50;
     static{
         tooSimilarListener = Event.registerHandler(Event.TYPE.GESTURES_TOO_SIMILAR, (Event event) -> {
             System.out.print("Gestures are too similar: ");
@@ -86,16 +88,14 @@ public class DecisionTree {
     
     public static void create(ArrayList<Gesture> gestureList) throws Exception{
         root = null;
-//        System.out.println("creating decision tree with gestures");
-        gestureList.forEach((gesture) -> {
-            System.out.println(gesture.name);
-        });
+        System.out.println("Creating decision tree with:" + gestureList);
         build(root, gestureList);
     }
     
     private static DecisionTree.Attribute determineBestAttribute(ArrayList<Gesture> gestureList, ArrayList<DecisionTree.Attribute> usedAttributes) throws Exception{
         HashMap<Attribute, Integer> distribution = new HashMap<>();
         int gestureCount = gestureList.size();
+        System.out.println(gestureList);
         if(gestureCount == 0){
             throw new Exception("Cannot determine best attribute with a list of 0 gestures");
         }
@@ -108,6 +108,7 @@ public class DecisionTree {
                 //logic to determine best attribute
                 //get number of similar values for the attribute
                 for(Gesture gesture : gestureList){
+//                    System.out.println("Gesture: " + gesture);
                     Object value = gesture.getAttributeValue(att);
                     if(numGesturesWithValues.containsKey(value)){
                         Integer num = numGesturesWithValues.get(value);
@@ -227,10 +228,20 @@ public class DecisionTree {
     
     public static Gesture findGesture(Frame frame)throws Exception{
         gestureSearchBegins.trigger();
-        nodeList.clear();
-        nodeList.add(root);
-        while(nodeListHasNodeThatIsNotGesture(nodeList)){
-            nextNode = nodeList.remove(0);
+        nodeListAndConfidence.clear();
+        nodeListAndConfidence.put(root, 0.0);
+        Double currentConfidence;
+//        nodeList.clear();
+//        nodeList.add(root);
+        while(nodeListHasNodeThatIsNotGesture(new ArrayList(nodeListAndConfidence.keySet()))){
+            currentConfidence = 0.0;
+//            nextNode = nodeList.remove(0);
+            for(Entry<DecisionTreeNode, Double> entry : nodeListAndConfidence.entrySet()) {
+                nextNode = entry.getKey();
+                currentConfidence = entry.getValue();
+                break;
+            }
+            nodeListAndConfidence.remove(nextNode);
             hand = frame.hands().frontmost();
             valueToCheck = null;
             switch(nextNode.getAttribute()){
@@ -327,14 +338,25 @@ public class DecisionTree {
                     break;
 */
             }
-            nodeList.addAll(nextNode.getNextNodesByValue(valueToCheck));
+            HashMap<DecisionTreeNode, Double> nextNodes = nextNode.getNextNodesByValueWithConfidence(valueToCheck);
+            for(Entry<DecisionTreeNode, Double> entry : nextNodes.entrySet()) {
+                nodeListAndConfidence.put(entry.getKey(), currentConfidence + entry.getValue());
+            }
+//            nodeList.addAll(nextNode.getNextNodesByValueWithConfidence(valueToCheck).keySet());
         }
         gesturesFound.clear();
-        for(DecisionTreeNode node : nodeList){
-            if(node != null && node.isGesture()){
+        for(Entry<DecisionTreeNode, Double> entry : nodeListAndConfidence.entrySet()) {
+            DecisionTreeNode node = entry.getKey();
+            Double confidence = entry.getValue() / Attribute.values().length;
+            if(node != null && node.isGesture() && confidence > gestureFoundThreshold) {
                 gesturesFound.add((Gesture)node);
             }
         }
+//        for(DecisionTreeNode node : nodeList){
+//            if(node != null && node.isGesture()){
+//                gesturesFound.add((Gesture)node);
+//            }
+//        }
         if(gesturesFound.size() == 1){
             return gesturesFound.get(0);
         } else if (gesturesFound.size() > 1){
