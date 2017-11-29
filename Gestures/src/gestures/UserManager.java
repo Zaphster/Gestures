@@ -274,6 +274,17 @@ public class UserManager implements JSONWritableReadable {
         UserManager.storeUser(currentUser);
     }
     
+    public static void removeGestureByNameFromCurrentUser(String gestureName) throws Exception {
+        initializeManager();
+        manager._removeGestureByNameFromCurrentUser(gestureName);
+    }
+    
+    private void _removeGestureByNameFromCurrentUser(String gestureName) throws Exception {
+        checkIfCurrentUserIsSet();
+        currentUser.removeGesturebyGestureName(gestureName);
+        UserManager.storeUser(currentUser);
+    }
+    
     public static void mapGestureToCommand(String gestureName, Command command) throws Exception{
         initializeManager();
         manager._mapGestureToCommand(gestureName, command);
@@ -394,6 +405,7 @@ public class UserManager implements JSONWritableReadable {
     }
     
     private static void storeUser(User user) throws Exception{
+//        System.out.println("storing user " + user.getName());
         createDirectory();
         String filepath = baseFilepath + user.getName() + ".bin";
         String toWrite = user.makeJSONString();

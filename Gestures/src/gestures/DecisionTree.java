@@ -95,7 +95,7 @@ public class DecisionTree {
     private static DecisionTree.Attribute determineBestAttribute(ArrayList<Gesture> gestureList, ArrayList<DecisionTree.Attribute> usedAttributes) throws Exception{
         HashMap<Attribute, Integer> distribution = new HashMap<>();
         int gestureCount = gestureList.size();
-        System.out.println(gestureList);
+//        System.out.println(gestureList);
         if(gestureCount == 0){
             throw new Exception("Cannot determine best attribute with a list of 0 gestures");
         }
