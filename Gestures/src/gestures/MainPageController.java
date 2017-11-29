@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -32,6 +33,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.util.Callback;
 import javafx.util.converter.DefaultStringConverter;
@@ -78,7 +81,16 @@ public class MainPageController implements Initializable {
     
     @FXML
     private ComboBox comboName;
-
+    
+    @FXML
+    private Button deleteUserBtn;
+    
+    @FXML
+    private Button stopBtn;
+    
+    @FXML
+    private Button exitBtn;
+    
     @FXML
     private TableView<Map.Entry<Command, Gesture>> gestureMappingTable;
 
@@ -270,8 +282,6 @@ public class MainPageController implements Initializable {
       if(selectedUser != null){
         UserManager.setCurrentUser(selectedUser);
       }
-      //show the current user gesture lists
-      //System.out.println(UserManager.getCurrentUser().makeJSONString());
     }
     
     public void loadCurrentUser() throws Exception{
@@ -300,5 +310,57 @@ public class MainPageController implements Initializable {
             stage.show();
         }  
     }
+    
+        
+    
+    @FXML
+    public void handleUserDelete(ActionEvent event) throws IOException, Exception {
+        String userToDelete = UserManager.getCurrentUsername();
+        try {
+            Alert alert = new Alert(AlertType.CONFIRMATION);
+            alert.setTitle("Delete User Confirmation");
+            alert.setHeaderText("Are you sure want to DELETE user: " + userToDelete + " ?");
+            alert.setContentText("You will not be able to recover deleted user!");
 
+            Optional<ButtonType> result = alert.showAndWait();
+            
+            if (result.get() == ButtonType.OK){
+
+                UserManager.deleteUser(userToDelete);
+                populateProfileList();
+                
+                comboName.getSelectionModel().selectFirst();
+                String defaultSelection = (String)comboName.getSelectionModel().getSelectedItem();
+                UserManager.setCurrentUser(defaultSelection);
+                
+                Alert alertInfo = new Alert(AlertType.INFORMATION);
+                alertInfo.setTitle("Information");
+                alertInfo.setHeaderText("You have successfully deleted user " + userToDelete +" !");
+                alertInfo.setContentText("First user in the list is selected as default!");
+                alertInfo.showAndWait();
+                
+                
+            }
+        }catch (Exception ex){
+            Logger.getLogger(GestureManagerController.class.getName()).log(Level.SEVERE, null, ex);
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Delete Current User Error");
+            alert.setContentText(ex.getMessage());
+            alert.showAndWait();
+        }
+    }
+    
+    public void handleStopBtn(ActionEvent event){
+        LeapService.stop();
+    }
+    
+    public void handleExitBtn(ActionEvent event){
+        // get a handle to the stage
+        Stage stage = (Stage) exitBtn.getScene().getWindow();
+        // do what you have to do
+        stage.close();
+    }
+    
+    
 }

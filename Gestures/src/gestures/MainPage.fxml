@@ -63,12 +63,25 @@
       </Label>
       <HBox alignment="CENTER_RIGHT" layoutY="603.0" prefHeight="47.0" prefWidth="820.0" style="-fx-background-color: #336699;">
          <children>
-
-            <Button fx:id="start" alignment="TOP_RIGHT" contentDisplay="CENTER" mnemonicParsing="false" onAction="#handleStart" text="Start" />
-
-            <Button alignment="BASELINE_CENTER" contentDisplay="CENTER" mnemonicParsing="false" text="Cancel" textAlignment="CENTER">
+            <Button fx:id="deleteUserBtn" mnemonicParsing="false" onAction="#handleUserDelete" text="Delete Current User">
                <HBox.margin>
-                  <Insets left="10.0" right="15.0" />
+                  <Insets right="482.0" />
+               </HBox.margin>
+            </Button>
+
+            <Button fx:id="start" alignment="TOP_RIGHT" contentDisplay="CENTER" mnemonicParsing="false" onAction="#handleStart" text="Start">
+               <HBox.margin>
+                  <Insets right="15.0" />
+               </HBox.margin></Button>
+
+            <Button fx:id="stopBtn" alignment="BASELINE_CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#handleStopBtn" text="Stop" textAlignment="CENTER">
+               <HBox.margin>
+                  <Insets right="15.0" />
+               </HBox.margin>
+            </Button>
+            <Button fx:id="exitBtn" mnemonicParsing="false" onAction="#handleExitBtn" text="Exit">
+               <HBox.margin>
+                  <Insets right="15.0" />
                </HBox.margin>
             </Button>
          </children>

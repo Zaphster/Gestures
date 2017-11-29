@@ -8,12 +8,10 @@ package gestures;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -93,7 +91,6 @@ public class GestureManagerController implements Initializable {
             gestureColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<ArrayList<Gesture>, String>, ObservableValue<String>>() {
             @Override
             public ObservableValue<String> call(TableColumn.CellDataFeatures<ArrayList<Gesture>, String> p) {
-                System.out.println("ytest");
                 return new SimpleObjectProperty(p.getValue());
             }
             });         
@@ -115,8 +112,6 @@ public class GestureManagerController implements Initializable {
         
     }
     
-    
-    
     @FXML
     private void deleteGestureFromList() throws IOException, Exception {
         
@@ -133,5 +128,5 @@ public class GestureManagerController implements Initializable {
             alert.setContentText(ex.getMessage());
             alert.showAndWait();
         }  
-    }
+    }    
 }
