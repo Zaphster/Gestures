@@ -50,13 +50,13 @@
       </Label>
 
       <Button fx:id="btnNewGesture" layoutX="32.0" layoutY="547.0" mnemonicParsing="false" onAction="#handleNewGesture" text="Create New Gesture" />
-      <ImageView fitHeight="288.0" fitWidth="345.0" layoutX="456.0" layoutY="266.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="288.0" fitWidth="345.0" layoutX="456.0" layoutY="152.0" pickOnBounds="true" preserveRatio="true">
 
          <image>
             <Image url="@../images/Leap%20Motion%20Diagnostic%20Visualizer_0441.png" />
          </image>
       </ImageView>
-      <Label layoutX="456.0" layoutY="238.0" text="Corresponding Gesture">
+      <Label layoutX="456.0" layoutY="122.0" text="Corresponding Gesture">
          <font>
             <Font size="14.0" />
          </font>
