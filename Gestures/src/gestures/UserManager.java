@@ -313,6 +313,78 @@ public class UserManager implements JSONWritableReadable {
         }
     }
     
+    public static UserSettings getUserSettings() {
+        initializeManager();
+        return manager._getUserSettings();
+    }
+    
+    private UserSettings _getUserSettings(){
+        if(currentUser != null) {
+            return currentUser.getSettings();
+        }
+        return null;
+    }
+    
+    public static void saveSettings(UserSettings settings) {
+        initializeManager();
+        manager._saveSettings(settings);
+    }
+    
+    private void _saveSettings(UserSettings settings) {
+        try {
+            this.checkIfCurrentUserIsSet();
+            currentUser.saveSettings(settings);
+            UserManager.storeUser(currentUser);
+        } catch (Exception e) {
+            Logger.getLogger(UserManager.class.getName()).log(Level.SEVERE, null, e);
+        }
+    }
+    
+    public static int getGestureFoundThreshold() {
+        initializeManager();
+        return manager._getGestureFoundThreshold();
+    }
+    
+    public static int getMouseClickDelay() {
+        initializeManager();
+        return manager._getMouseClickDelay();
+    }
+    
+    public static boolean getUseZAxis() {
+        initializeManager();
+        return manager._getUseZAxis();
+    }
+    
+    public static int getKeyPressDelay() {
+        initializeManager();
+        return manager._getKeyPressDelay();
+    }
+    
+    public static float getPadSensitivity() {
+        initializeManager();
+        return manager._getPadSensitivity();
+    }
+    
+    private int _getGestureFoundThreshold() {
+        return currentUser.getGestureFoundThreshold();
+    }
+    
+    private int _getMouseClickDelay() {
+        return currentUser.getMouseClickDelay();
+    }
+    
+    private boolean _getUseZAxis() {
+        return currentUser.getUseZAxis();
+    }
+    
+    private int _getKeyPressDelay() {
+        return currentUser.getKeyPressDelay();
+    }
+    
+    private float _getPadSensitivity() {
+        return currentUser.getPadSensitivity();
+    }
+    
     public static void readyTree() throws Exception{
         initializeManager();
         manager._readyTree();
@@ -327,6 +399,7 @@ public class UserManager implements JSONWritableReadable {
             }
         }
         DecisionTree.create(gestures);
+        DecisionTree.setGestureFoundThreshold(currentUser.getGestureFoundThreshold());
     }
     
     public static void loadFromFile() throws Exception{
@@ -405,7 +478,6 @@ public class UserManager implements JSONWritableReadable {
     }
     
     private static void storeUser(User user) throws Exception{
-//        System.out.println("storing user " + user.getName());
         createDirectory();
         String filepath = baseFilepath + user.getName() + ".bin";
         String toWrite = user.makeJSONString();

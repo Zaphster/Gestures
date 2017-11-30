@@ -16,34 +16,15 @@ import org.json.simple.JSONValue;
  * @author Cameron
  */
 public class GestureVector implements JSONWritableReadable{
-//    private RadianRange xRange;
-//    private RadianRange yRange;
-//    private RadianRange zRange;
-    
-//    private Double x;
-//    private Double y;
-//    private Double z;
     private Vector thisVector;
     private static Double maxAngleTo = ((Double)Math.PI);
     
     
     
     public GestureVector(){
-//        this.xRange = new RadianRange();
-//        this.yRange = new RadianRange();
-//        this.zRange = new RadianRange();
     }
     
-//    public GestureVector(Double xCenter, Double xRange, Double yCenter, Double yRange, Double zCenter, Double zRange) throws Exception{
-//        this.xRange = new RadianRange(xCenter, xRange);
-//        this.yRange = new RadianRange(yCenter, yRange);
-//        this.zRange = new RadianRange(zCenter, zRange);
-//    }
-    
     public GestureVector(Double x, Double y, Double z) throws Exception{
-//        this.x = x;
-//        this.y = y;
-//        this.z = z;
         if(thisVector == null){
             thisVector = new Vector();
         }
@@ -53,9 +34,6 @@ public class GestureVector implements JSONWritableReadable{
     }
     
     public GestureVector(Vector vector) throws Exception{
-//        this.x = toDouble(vector.getX());
-//        this.y = toDouble(vector.getY());
-//        this.z = toDouble(vector.getZ());
         if(thisVector == null){
             thisVector = new Vector();
         }
@@ -63,12 +41,6 @@ public class GestureVector implements JSONWritableReadable{
         thisVector.setY(vector.getY());
         thisVector.setZ(vector.getZ());
     }
-    
-//    public GestureVector(Vector vector, Double range) throws Exception{
-//        this.xRange = new RadianRange(toDouble(vector.getX()), range);
-//        this.yRange = new RadianRange(toDouble(vector.getY()), range);
-//        this.zRange = new RadianRange(toDouble(vector.getZ()), range);
-//    }
     
     private Double toDouble(float value){
         return Double.parseDouble(Float.toString(value));
@@ -94,14 +66,6 @@ public class GestureVector implements JSONWritableReadable{
         return getPercentageDirectionComparison(toCompare);
     }
     
-//    private Boolean contains(Double x, Double y, Double z){
-//        return xRange.contains(x) && yRange.contains(y) && zRange.contains(z);
-//    }
-    
-//    public Boolean contains(Vector vector){
-//        return this.contains(toDouble(vector.getX()), toDouble(vector.getY()), toDouble(vector.getZ()));
-//    }
-    
     private void setVector(Double x, Double y, Double z) throws Exception{
         setX(x);
         setY(y);
@@ -112,32 +76,12 @@ public class GestureVector implements JSONWritableReadable{
         setVector(toDouble(vector.getX()), toDouble(vector.getY()), toDouble(vector.getZ()));
     }
     
-//    public void setAllRanges(Double range) throws Exception{
-//        setXRange(range);
-//        setYRange(range);
-//        setZRange(range);
-//    }
-    
-//    public void setAllRanges(float range) throws Exception{
-//        setAllRanges(toDouble(range));
-//    }
-    
-//    public void setAllRanges(Double x, Double y, Double z) throws Exception{
-//        setXRange(x);
-//        setYRange(y);
-//        setZRange(z);
-//    }
-    
     private void setX(Double x) throws Exception{
         if(thisVector == null){
             thisVector = new Vector();
         }
         thisVector.setX(x.floatValue());
     }
-    
-//    public void setXRange(Double x) throws Exception{
-//        xRange.setRange(x);
-//    }
     
     private void setY(Double y) throws Exception{
         if(thisVector == null){
@@ -146,20 +90,12 @@ public class GestureVector implements JSONWritableReadable{
         thisVector.setY(y.floatValue());
     }
     
-//    public void setYRange(Double y) throws Exception{
-//        yRange.setRange(y);
-//    }
-    
     private void setZ(Double z) throws Exception{
         if(thisVector == null){
             thisVector = new Vector();
         }
         thisVector.setZ(z.floatValue());
     }
-    
-//    public void setZRange(Double z) throws Exception{
-//        zRange.setRange(z);
-//    }
     
     @Override
     public String toString(){
@@ -208,9 +144,5 @@ public class GestureVector implements JSONWritableReadable{
         } catch (Exception ex) {
             Logger.getLogger(GestureVector.class.getName()).log(Level.SEVERE, null, ex);
         }
-//        xRange.makeSelfFromJSONObject((JSONObject)jsonObject.get("xRange"));
-//        yRange.makeSelfFromJSONObject((JSONObject)jsonObject.get("yRange"));
-//        zRange.makeSelfFromJSONObject((JSONObject)jsonObject.get("zRange"));
-        
     }
 }

@@ -34,7 +34,6 @@ public class BasicCommands implements OSControl{
     private int autoDelay = 0;
     private int keyPressDelay = 50;
     private int mouseClickDelay = 50;
-    private int mouseMovementDelay = 0;
     
     private int screenHeight;
     private int screenWidth;
@@ -190,7 +189,7 @@ public class BasicCommands implements OSControl{
         Point nextMousePosition = getMousePosition();
         if(useZAxis == true){
             nextMousePosition.x += moveAmountX;
-            nextMousePosition.y -= moveAmountZ;
+            nextMousePosition.y += moveAmountZ;
         }else{
             nextMousePosition.x += moveAmountX;
             nextMousePosition.y -= moveAmountY;
@@ -358,5 +357,25 @@ public class BasicCommands implements OSControl{
 
     private Point getMousePosition() {
         return MouseInfo.getPointerInfo().getLocation();
+    }
+
+    @Override
+    public void setMouseClickDelay(int delay) {
+        this.mouseClickDelay = delay;
+    }
+
+    @Override
+    public void setKeyPressDelay(int delay) {
+        this.keyPressDelay = delay;
+    }
+
+    @Override
+    public void setPadSensitivityCoefficient(float coefficient) {
+        this.padSensitivity_coefficient = Math.max(Math.min(coefficient, 1500), 0);
+    }
+
+    @Override
+    public void setUseZAxis(boolean useZAxis) {
+        this.useZAxis = useZAxis;
     }
 }

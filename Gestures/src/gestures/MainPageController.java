@@ -8,17 +8,20 @@ package gestures;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -146,8 +149,8 @@ public class MainPageController implements Initializable {
     private void handleSettingsButton(ActionEvent event) throws IOException, Exception{
 
         if(UserManager.getCurrentUser() == null){
-                showError("Error", "No User Selected", "Create or select a user before managing settings.");
-                return;
+            showError("Error", "No User Selected", "Create or select a user before managing settings.");
+            return;
         }
         LeapService.stop();
         Stage stage = (Stage) settingsButton.getScene().getWindow();
@@ -286,7 +289,12 @@ public class MainPageController implements Initializable {
         });
         columnGesture.setCellFactory(ComboBoxTableCell.forTableColumn(new DefaultStringConverter(), gestureCombo));
         ObservableList<Map.Entry<Command, Gesture>> items = FXCollections.observableArrayList(commandAndGesture.entrySet());
-        gestureMappingTable.getItems().addAll(items);
+        SortedList sortedList = new SortedList(items, (Object o1, Object o2) -> {
+            Entry<Command, Gesture> obj1 = (Entry)o1;
+            Entry<Command, Gesture> obj2 = (Entry)o2;
+            return obj1.getKey().name().compareToIgnoreCase(obj2.getKey().name());
+        });
+        gestureMappingTable.getItems().addAll(sortedList);
         gestureMappingTable.setEditable(true);
     }
     

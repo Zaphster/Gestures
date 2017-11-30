@@ -14,4 +14,8 @@ public interface OSControl {
     public void updateHandPosition(Integer x, Integer y, Integer z);
     public void resetHandPosition();
     public void moveMouse();
+    public void setMouseClickDelay(int delay);
+    public void setKeyPressDelay(int delay);
+    public void setPadSensitivityCoefficient(float coefficient);
+    public void setUseZAxis(boolean useZAxis);
 }
