@@ -35,16 +35,7 @@ public enum Command {
     CAPSLOCK_PRESS,
     F12_PRESS,
     F11_PRESS,
-    F10_PRESS,
-    F9_PRESS,
-    F8_PRESS,
-    F7_PRESS,
-    F6_PRESS,
-    F5_PRESS,
-    F4_PRESS,
-    F3_PRESS,
-    F2_PRESS,
-    F1_PRESS;
+    F10_PRESS;
         
 
     public String toTableString(){
