@@ -92,6 +92,9 @@ public class MainPageController implements Initializable {
     private Button exitBtn;
     
     @FXML
+    private Button settingsButton;
+    
+    @FXML
     private TableView<Map.Entry<Command, Gesture>> gestureMappingTable;
 
     @FXML
@@ -127,6 +130,23 @@ public class MainPageController implements Initializable {
             stage.setScene(scene);
             stage.show();
         }  
+    }
+    
+    @FXML
+    private void handleSettingsButton(ActionEvent event) throws IOException, Exception{
+
+        if(UserManager.getCurrentUser() == null){
+            throw new Exception("A user profile must be selected before acessing the settings.");
+        }
+        LeapService.stop();
+        Stage stage = (Stage) settingsButton.getScene().getWindow();
+
+        Parent settingsPage = FXMLLoader.load(getClass().getResource("SettingsPage.fxml"));
+        Scene scene = new Scene(settingsPage);
+
+        stage.setScene(scene);
+        stage.show();
+        
     }
     
     @FXML

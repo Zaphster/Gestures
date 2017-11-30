@@ -40,22 +40,10 @@ public class BasicCommands implements OSControl{
     
     private int mousePositionX;
     private int mousePositionY;
-
-    private int trackPadWindowHeight = 500;    
-    private int trackPadWindowWidth = 500;
     
-    private float joyStickSensitivity = 100; //is percent
-    //private float padSensitivity = 1500;      //is percent
-    private float slow_cutoff = 10;
-    private float medium_cutoff = 20;
-    private float high_cutoff = 30;
     private float padSensitivity_coefficient = 500;
-    private float padSensitivity_slow = 500;
-    private float padSensitivity_medium = 1500;
-    private float padSensitivity_high = 2500;
     
     private boolean useZAxis = false;
-    private int yPosCalibration = 500;
     
     private int handCurrentX;
     private int handCurrentY;
@@ -168,30 +156,6 @@ public class BasicCommands implements OSControl{
         smoother.smooth(x, y);
     }
     
-    private void moveJoyStick(){
-        
-        int x_pos = Math.round(this.handCurrentX*joyStickSensitivity/100);
-        int y_pos = Math.round(this.handCurrentY*joyStickSensitivity/100);
-        int z_pos = Math.round(this.handCurrentZ*joyStickSensitivity/100);
-        
-        if(useZAxis == true){
-            
-            smoothMove(mousePositionX + x_pos, mousePositionY + z_pos);
-            
-            mousePositionX = mousePositionX + x_pos;
-            mousePositionY = mousePositionY + z_pos;
-            
-        }else{
-            
-            smoothMove(mousePositionX + x_pos, mousePositionY - (y_pos-yPosCalibration));
-            
-            mousePositionX = mousePositionX + x_pos;
-            mousePositionY = mousePositionY - (y_pos-yPosCalibration);
-            
-        }
-        
-    }
-    
     private double getPadSensitivity(){
         double hypotenuse;
         if(useZAxis) {
@@ -233,29 +197,6 @@ public class BasicCommands implements OSControl{
         smoothMove(nextMousePosition.x, nextMousePosition.y);
     }
     
-    private void moveTrackPad(){
-        
-        int x_pos = (int)Math.round(this.handCurrentX*getPadSensitivity()/100);
-        int y_pos = (int)Math.round(this.handCurrentY*getPadSensitivity()/100);
-        int z_pos = (int)Math.round(this.handCurrentZ*getPadSensitivity()/100);
-        
-        if(useZAxis == true){
-            
-            if(x_pos > trackPadWindowWidth || x_pos < (-1)*trackPadWindowWidth || z_pos > trackPadWindowHeight || z_pos < (-1)*trackPadWindowHeight){
-                
-                Point pointer = getMousePosition();
-                mousePositionX = (int)pointer.getX();
-                mousePositionY = (int)pointer.getY();
-                
-            }else{
-                smoothMove(mousePositionX + x_pos, mousePositionY + z_pos);
-            }
-        }else{
-            smoothMove(mousePositionX + x_pos, mousePositionY - (y_pos - yPosCalibration));
-        }
-           
-    }
-    
     public void mouseScroll(){
         
         int z_pos = this.handCurrentZ;
@@ -264,7 +205,7 @@ public class BasicCommands implements OSControl{
         if(useZAxis == true){
             robot.mouseWheel(z_pos);
         }else{
-            robot.mouseWheel((y_pos - yPosCalibration)*(-1));
+            robot.mouseWheel((y_pos*(-1)));
         }
         
     }

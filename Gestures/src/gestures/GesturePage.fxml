@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
 <?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.SubScene?>
@@ -8,12 +15,22 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 
-<AnchorPane id="AnchorPane" prefHeight="650.0" prefWidth="820.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gestures.GesturePageController">
+<AnchorPane id="AnchorPane" prefHeight="650.0" prefWidth="820.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gestures.GesturePageController">
     <stylesheets>
         <URL value="@gesturepage.css" />
     </stylesheets>
    <children>
-      <HBox prefHeight="75.0" prefWidth="820.0" style="-fx-background-color: #336699;" />
+      <HBox prefHeight="75.0" prefWidth="820.0" style="-fx-background-color: #336699;">
+         <children>
+            <ImageView fitHeight="59.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../images/logo.png" />
+               </image>
+               <HBox.margin>
+                  <Insets left="10.0" top="10.0" />
+               </HBox.margin>
+            </ImageView>
+         </children></HBox>
       <HBox alignment="CENTER_RIGHT" layoutY="605.0" prefHeight="45.0" prefWidth="820.0" style="-fx-background-color: #336699;">
          <children>
             <Button fx:id="captureBtn" mnemonicParsing="false" onAction="#handleCaptureBtn" text="Capture">
