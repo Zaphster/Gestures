@@ -7,6 +7,7 @@ package gestures;
 
 import java.awt.*;
 import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 import javafx.animation.Timeline;
 
 /**
@@ -22,7 +23,7 @@ import javafx.animation.Timeline;
  * 
  *  - Spruce up mouseScroll
  * 
- *  - sets/gets
+ * 
  * 
  */
 
@@ -212,19 +213,6 @@ public class BasicCommands implements OSControl{
 
     @Override
     public void performCommand(Command command) {
-        
-//        MOUSE_PRIMARY_DOWN,
-//        MOUSE_PRIMARY_HELD_DOWN,
-//        MOUSE_PRIMARY_UP,
-//        MOUSE_SECONDARY_DOWN,
-//        MOUSE_SECONDARY_HELD_DOWN,
-//        MOUSE_SECONDARY_UP,
-//        MOUSE_MOVE,
-//        MOUSE_SCROLL_UP,
-//        MOUSE_SCROLL_DOWN,
-//        KEY_DOWN,
-//        KEY_HELD_DOWN,
-//        KEY_UP,
 
         switch(command){
             case MOUSE_PRIMARY_DOWN:
@@ -248,17 +236,81 @@ public class BasicCommands implements OSControl{
             case MOUSE_SCROLL:
                 this.mouseScroll();
                 break;
-//            case MOUSE_MOVE:
-////                this.moveJoyStick();
-////                this.moveTrackPad();
-//                this.moveStandard();
-//                break;
-            case KEY_DOWN:
+            case BACKSPACE_HELD_DOWN:
+                this.holdKey(KeyEvent.VK_BACK_SPACE);
                 break;
-            case KEY_HELD_DOWN:
+            case BACKSPACE_RELEASE:
+                this.releaseKey(KeyEvent.VK_BACK_SPACE);
                 break;
-            case KEY_UP:
-                break;    
+            case BACKSPACE_PRESS:
+                this.pressKey(KeyEvent.VK_BACK_SPACE);
+                break;
+            case ENTER_HELD_DOWN:
+                this.holdKey(KeyEvent.VK_ENTER);
+                break;
+            case ENTER_RELEASE:
+                this.releaseKey(KeyEvent.VK_ENTER);
+                break;
+            case ENTER_PRESS:
+                this.pressKey(KeyEvent.VK_ENTER);
+                break;
+            case SHIFT_HELD_DOWN:
+                this.holdKey(KeyEvent.VK_SHIFT);
+                break;
+            case SHIFT_RELEASE:
+                this.releaseKey(KeyEvent.VK_SHIFT);
+                break;
+            case SHIFT_PRESS:
+                this.pressKey(KeyEvent.VK_SHIFT);
+                break;
+            case TAB_HELD_DOWN:
+                this.holdKey(KeyEvent.VK_TAB);
+                break;
+            case TAB_RELEASE:
+                this.releaseKey(KeyEvent.VK_TAB);
+                break;
+            case TAB_PRESS:
+                this.pressKey(KeyEvent.VK_TAB);
+                break;
+            case CAPSLOCK_PRESS:
+                this.holdKey(KeyEvent.VK_CAPS_LOCK);
+                break;
+            case F12_PRESS:
+                this.holdKey(KeyEvent.VK_F12);
+                break;
+            case F11_PRESS:
+                this.holdKey(KeyEvent.VK_F11);
+                break;
+            case F10_PRESS:
+                this.holdKey(KeyEvent.VK_F10);
+                break;
+            case F9_PRESS:
+                this.holdKey(KeyEvent.VK_F9);
+                break;
+            case F8_PRESS:
+                this.holdKey(KeyEvent.VK_F8);
+                break;
+            case F7_PRESS:
+                this.holdKey(KeyEvent.VK_F7);
+                break;
+            case F6_PRESS:
+                this.holdKey(KeyEvent.VK_F6);
+                break;
+            case F5_PRESS:
+                this.holdKey(KeyEvent.VK_F5);
+                break;
+            case F4_PRESS:
+                this.holdKey(KeyEvent.VK_F4);
+                break;
+            case F3_PRESS:
+                this.holdKey(KeyEvent.VK_F3);
+                break;
+            case F2_PRESS:
+                this.holdKey(KeyEvent.VK_F2);
+                break;
+            case F1_PRESS:
+                this.holdKey(KeyEvent.VK_F1);
+                break;
         }
     }
     

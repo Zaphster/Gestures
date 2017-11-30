@@ -21,7 +21,7 @@
          </children>
       </HBox>
       <HBox prefHeight="75.0" prefWidth="820.0" style="-fx-background-color: #336699;" />
-      <TabPane layoutX="8.0" layoutY="82.0" prefHeight="500.0" prefWidth="805.0" style="-fx-background-color: #DDDDDD;" stylesheets="@settingspage.css" tabClosingPolicy="UNAVAILABLE">
+      <TabPane layoutX="8.0" layoutY="82.0" prefHeight="500.0" prefWidth="805.0" stylesheets="@settingspage.css" tabClosingPolicy="UNAVAILABLE">
         <tabs>
           <Tab closable="false" text="Command Settings">
             <content>
@@ -63,17 +63,17 @@
                               </Label>
                               <Slider fx:id="movementDelaySlider" majorTickUnit="50.0" max="1000.0" minorTickCount="5" onDragDetected="#movementDelayChange" showTickLabels="true" showTickMarks="true" GridPane.columnIndex="1" GridPane.columnSpan="2">
                                  <GridPane.margin>
-                                    <Insets right="40.0" />
+                                    <Insets right="60.0" top="23.0" />
                                  </GridPane.margin>
                               </Slider>
                               <Slider fx:id="clickDelaySlider" majorTickUnit="50.0" max="1000.0" minorTickCount="5" onDragDetected="#clickDelayChange" showTickLabels="true" showTickMarks="true" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1">
                                  <GridPane.margin>
-                                    <Insets right="40.0" />
+                                    <Insets right="60.0" top="23.0" />
                                  </GridPane.margin>
                               </Slider>
-                              <Slider fx:id="mouseSensitivitySlider" majorTickUnit="50.0" max="1000.0" min="1.0" minorTickCount="5" onDragDetected="#mouseSensitivityChange" showTickLabels="true" showTickMarks="true" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="3">
+                              <Slider fx:id="mouseSensitivitySlider" majorTickUnit="50.0" max="1000.0" minorTickCount="5" onDragDetected="#mouseSensitivityChange" showTickLabels="true" showTickMarks="true" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="3">
                                  <GridPane.margin>
-                                    <Insets right="40.0" />
+                                    <Insets right="60.0" top="23.0" />
                                  </GridPane.margin>
                               </Slider>
                               <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="65.0" prefWidth="327.0" text="Key Press Delay" textAlignment="CENTER" textFill="#6e6e6e" GridPane.rowIndex="2">
@@ -83,7 +83,7 @@
                               </Label>
                               <Slider fx:id="keyDelaySlider" majorTickUnit="50.0" max="1000.0" minorTickCount="5" onDragDetected="#keyDelayChange" showTickLabels="true" showTickMarks="true" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2">
                                  <GridPane.margin>
-                                    <Insets right="40.0" />
+                                    <Insets right="60.0" top="23.0" />
                                  </GridPane.margin>
                               </Slider>
                               <RadioButton fx:id="zAxisRadio" mnemonicParsing="false" onAction="#zAxisRadioChange" text="Z-Axis" GridPane.columnIndex="1" GridPane.rowIndex="4">
@@ -96,6 +96,46 @@
                                     <Insets left="100.0" />
                                  </GridPane.margin>
                               </RadioButton>
+                              <Label text="ms" textFill="#8a8a8a" GridPane.columnIndex="2">
+                                 <GridPane.margin>
+                                    <Insets left="210.0" />
+                                 </GridPane.margin>
+                                 <font>
+                                    <Font name="System Bold" size="13.0" />
+                                 </font>
+                              </Label>
+                              <Label GridPane.columnIndex="2" GridPane.rowIndex="1">
+                                 <GridPane.margin>
+                                    <Insets bottom="23.0" left="210.0" />
+                                 </GridPane.margin>
+                                 <font>
+                                    <Font name="System Bold" size="13.0" />
+                                 </font>
+                              </Label>
+                              <Label text="ms" textFill="#8a8a8a" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                                 <font>
+                                    <Font name="System Bold" size="13.0" />
+                                 </font>
+                                 <GridPane.margin>
+                                    <Insets left="210.0" />
+                                 </GridPane.margin>
+                              </Label>
+                              <Label text="ms" textFill="#8a8a8a" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                                 <font>
+                                    <Font name="System Bold" size="13.0" />
+                                 </font>
+                                 <GridPane.margin>
+                                    <Insets left="210.0" />
+                                 </GridPane.margin>
+                              </Label>
+                              <Label text="\%" textFill="#8a8a8a" GridPane.columnIndex="2" GridPane.rowIndex="3">
+                                 <font>
+                                    <Font name="System Bold" size="13.0" />
+                                 </font>
+                                 <GridPane.margin>
+                                    <Insets left="215.0" />
+                                 </GridPane.margin>
+                              </Label>
                            </children>
                         </GridPane>
                      </children>
