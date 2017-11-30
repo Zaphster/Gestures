@@ -59,6 +59,9 @@ public class DecisionTreeNode {
     }
     
     public void setConditionalNode(Object value, DecisionTreeNode node) throws Exception{
+        if(node == null){
+            System.out.println("attempting to set a null node");
+        }
         if(attribute == null){
             throw new Exception("Set this node's attribute first");
         }
@@ -109,7 +112,7 @@ public class DecisionTreeNode {
             case THUMB_PROXIMAL_DIRECTION:
             case THUMB_DISTAL_DIRECTION:
                 */
-                //value should be Vector
+                //value should be GestureVector
                 if(!value.getClass().getName().equals(GestureVector.class.getName())){
                     throw new Exception("Attribute " + attribute + " expects a GestureVector");
                 }
@@ -142,17 +145,20 @@ public class DecisionTreeNode {
             case RING_EXTENDED:
             case PINKY_EXTENDED:
             case THUMB_EXTENDED:
-                //value should be boolean. compare against Boolean
+//                //value should be boolean. compare against Boolean
                 if(!value.getClass().getName().equals(Boolean.class.getName())){
                     throw new Exception("Attribute " + attribute + " must be given a boolean to be compared against");
                 }
                 Boolean boolVal = (Boolean)value;
+                String key = "";
                 if(boolVal){
-                    nodeList.put(attributeValueToOutcome.get(this.trueBool), 100.0);
-                    nodeList.put(attributeValueToOutcome.get(this.falseBool), 0.0);
+                    key = this.trueBool;
                 } else {
-                    nodeList.put(attributeValueToOutcome.get(this.falseBool), 100.0);
-                    nodeList.put(attributeValueToOutcome.get(this.trueBool), 0.0);
+                    key = this.falseBool;
+                }
+                DecisionTreeNode nodeToAdd = attributeValueToOutcome.get(key);
+                if(nodeToAdd != null){
+                    nodeList.put(nodeToAdd, 100.0);
                 }
                 break;
             case PALM_NORMAL:
@@ -192,15 +198,17 @@ public class DecisionTreeNode {
                     try{
                         float percentageSimilar = compareTo.getSimilarity((Vector)value);
 //                        System.out.println("Percentage similar: " + percentageSimilar);
-                        
-                        nodeList.put(node, (double)percentageSimilar);
+                        if(node != null){
+                            nodeList.put(node, (double)percentageSimilar);
+                        }
                     } catch (Exception e) {
                         Logger.getLogger(DecisionTreeNode.class.getName()).log(Level.SEVERE, null, e);
                     }
                 });
                 break;
         }
-        show("nodeList" + nodeList.toString());
+//        show("possible nodes: " + attributeValueToOutcome.toString());
+//        show("accepted nodes: " + nodeList.toString());
         return nodeList;
     }
     

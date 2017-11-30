@@ -22,8 +22,8 @@ public class AdvancedRecognizer implements GestureRecognizer{
     public void scan(Frame frame){
         interval = (interval + 1) % 300;
         if(interval == 0){
-            System.out.println();
-            System.out.println("----------------");
+//            System.out.println();
+//            System.out.println("----------------");
         }
         if(frame != null){
             Hand hand = frame.hands().frontmost();
