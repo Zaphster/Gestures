@@ -2,9 +2,8 @@ package gestures;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Optional;
 import java.util.ResourceBundle;
-import javafx.collections.FXCollections;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -12,17 +11,12 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Slider;
-import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
-import javafx.scene.input.DragEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
 /**
@@ -88,7 +82,7 @@ public class SettingsPageController implements Initializable {
     @FXML
     private void handleReturnButton(ActionEvent event) throws IOException, Exception{
         
-        if(!applyButton.isDisable()){
+        if(!applyButton.isDisabled()){
         
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setHeaderText("Save your changes?");
@@ -125,25 +119,18 @@ public class SettingsPageController implements Initializable {
         ButtonType noButton = new ButtonType("No", ButtonBar.ButtonData.NO);
         alert.getButtonTypes().setAll(okButton, noButton);
         alert.showAndWait().ifPresent(type -> {
-                if (type == okButton) {
-                    settings.setDefaultSettings();
-                    showCurrentSettings();
-                    
-                    if(!applyButton.isDisable()){
-                        applyButton.setDisable(true);
-                    }
-                }
+            if (type == okButton) {
+                settings.setDefaultSettings();
+                showCurrentSettings();
+                applyButton.setDisable(true);
+            }
         });
     }
     
     @FXML
     private void handleApplyButton(ActionEvent event) throws IOException, Exception{
-        
         saveSettings();
-        
-        if(!applyButton.isDisable()){
-            applyButton.setDisable(true);
-        }
+        applyButton.setDisable(true);
         
     }
     
@@ -160,17 +147,23 @@ public class SettingsPageController implements Initializable {
             settings.setAxisChoice(false);
         }
         
-        //UserManager.getCurrentUser().setSettings();
+        UserManager.saveSettings(settings);
+        Capstone2_Group5.getOSController().setMouseClickDelay(settings.getMouseClickDelay());
+        Capstone2_Group5.getOSController().setKeyPressDelay(settings.getKeyPressDelay());
+        Capstone2_Group5.getOSController().setMouseMoveDelay(settings.getMouseMovementDelay());
+        Capstone2_Group5.getOSController().setPadSensitivityCoefficient(settings.getPadSensitivity());
+        Capstone2_Group5.getOSController().setUseZAxis(settings.getUseZAxis());
+        DecisionTree.setGestureFoundThreshold(settings.getGestureFoundThreshold());
     }
     
     private void showCurrentSettings(){
         this.movementDelaySlider.setValue((double)settings.getMouseMovementDelay());
         this.clickDelaySlider.setValue((double)settings.getMouseClickDelay());
-        this.mouseSensitivitySlider.setValue((double)settings.getPadSenstitivity());
+        this.mouseSensitivitySlider.setValue((double)settings.getPadSensitivity());
         this.keyDelaySlider.setValue((double)settings.getKeyPressDelay());
         this.gestureThresholdSlider.setValue((double)settings.getGestureFoundThreshold());
         
-        if(settings.getAxisChoice()){
+        if(settings.getUseZAxis()){
             this.zAxisRadio.setSelected(true);
         }else{
             this.yAxisRadio.setSelected(true);
@@ -180,40 +173,34 @@ public class SettingsPageController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
        
-       //settings = UserManager.getCurrentUser().getSettings();
-       settings = new UserSettings();
+       settings = UserManager.getUserSettings();
+       if(settings == null) {
+           settings = new UserSettings();
+       }
        
        showCurrentSettings();
        applyButton.setDisable(true);
        
-    }  
-
-    @FXML
-    private void movementDelayChange(MouseEvent event) {
-        if(applyButton.isDisabled()){
-            applyButton.setDisable(false);
-        }
+       movementDelaySlider.valueProperty().addListener((ObservableValue<? extends Number> ov, Number old_val, Number new_val) -> {
+           enableApplyButton();
+       });
+       clickDelaySlider.valueProperty().addListener((ObservableValue<? extends Number> ov, Number old_val, Number new_val) -> {
+           enableApplyButton();
+       });
+       mouseSensitivitySlider.valueProperty().addListener((ObservableValue<? extends Number> ov, Number old_val, Number new_val) -> {
+           enableApplyButton();
+       });
+       keyDelaySlider.valueProperty().addListener((ObservableValue<? extends Number> ov, Number old_val, Number new_val) -> {
+           enableApplyButton();
+       });
+       gestureThresholdSlider.valueProperty().addListener((ObservableValue<? extends Number> ov, Number old_val, Number new_val) -> {
+           enableApplyButton();
+       });
+       
     }
-
-    @FXML
-    private void clickDelayChange(MouseEvent event) {
-        if(applyButton.isDisabled()){
-            applyButton.setDisable(false);
-        }
-    }
-
-    @FXML
-    private void mouseSensitivityChange(MouseEvent event) {
-        if(applyButton.isDisabled()){
-            applyButton.setDisable(false);
-        }
-    }
-
-    @FXML
-    private void keyDelayChange(MouseEvent event) {
-        if(applyButton.isDisabled()){
-            applyButton.setDisable(false);
-        }
+    
+    private void enableApplyButton(){
+        applyButton.setDisable(false);
     }
 
     @FXML
@@ -225,13 +212,6 @@ public class SettingsPageController implements Initializable {
 
     @FXML
     private void yAxisRadioChange(ActionEvent event) {
-        if(applyButton.isDisabled()){
-            applyButton.setDisable(false);
-        }
-    }
-
-    @FXML
-    private void gestureThresholdChange(MouseEvent event) {
         if(applyButton.isDisabled()){
             applyButton.setDisable(false);
         }

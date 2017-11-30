@@ -40,7 +40,7 @@ public class Gestures extends Application {
     public static void main(String[] args){
         try {
             UserManager.loadFromFile();
-            System.out.println(UserManager.manager.makeJSONString());
+//            System.out.println(UserManager.manager.makeJSONString());
         } catch (Exception ex) {
             Logger.getLogger(Gestures.class.getName()).log(Level.SEVERE, null, ex);
         }

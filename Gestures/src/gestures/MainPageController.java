@@ -146,7 +146,8 @@ public class MainPageController implements Initializable {
     private void handleSettingsButton(ActionEvent event) throws IOException, Exception{
 
         if(UserManager.getCurrentUser() == null){
-            throw new Exception("A user profile must be selected before acessing the settings.");
+            showError("Error", "No User Selected", "Create or select a user first.");
+            return;
         }
         LeapService.stop();
         Stage stage = (Stage) settingsButton.getScene().getWindow();

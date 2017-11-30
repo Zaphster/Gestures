@@ -61,17 +61,17 @@
                                     <Font name="Arial Bold" size="13.0" />
                                  </font>
                               </Label>
-                              <Slider fx:id="movementDelaySlider" majorTickUnit="50.0" max="1000.0" minorTickCount="5" onDragDetected="#movementDelayChange" showTickLabels="true" showTickMarks="true" GridPane.columnIndex="1" GridPane.columnSpan="2">
+                              <Slider fx:id="movementDelaySlider" majorTickUnit="50.0" max="1000.0" minorTickCount="5" showTickLabels="true" showTickMarks="true" GridPane.columnIndex="1" GridPane.columnSpan="2">
                                  <GridPane.margin>
                                     <Insets right="40.0" />
                                  </GridPane.margin>
                               </Slider>
-                              <Slider fx:id="clickDelaySlider" majorTickUnit="50.0" max="1000.0" minorTickCount="5" onDragDetected="#clickDelayChange" showTickLabels="true" showTickMarks="true" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1">
+                              <Slider fx:id="clickDelaySlider" majorTickUnit="50.0" max="1000.0" minorTickCount="5" showTickLabels="true" showTickMarks="true" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1">
                                  <GridPane.margin>
                                     <Insets right="40.0" />
                                  </GridPane.margin>
                               </Slider>
-                              <Slider fx:id="mouseSensitivitySlider" majorTickUnit="50.0" max="1000.0" min="1.0" minorTickCount="5" onDragDetected="#mouseSensitivityChange" showTickLabels="true" showTickMarks="true" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="3">
+                              <Slider fx:id="mouseSensitivitySlider" majorTickUnit="50.0" max="1000.0" min="1.0" minorTickCount="5" showTickLabels="true" showTickMarks="true" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="3">
                                  <GridPane.margin>
                                     <Insets right="40.0" />
                                  </GridPane.margin>
@@ -81,7 +81,7 @@
                                     <Font name="Arial Bold" size="13.0" />
                                  </font>
                               </Label>
-                              <Slider fx:id="keyDelaySlider" majorTickUnit="50.0" max="1000.0" minorTickCount="5" onDragDetected="#keyDelayChange" showTickLabels="true" showTickMarks="true" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2">
+                              <Slider fx:id="keyDelaySlider" majorTickUnit="50.0" max="1000.0" minorTickCount="5" showTickLabels="true" showTickMarks="true" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2">
                                  <GridPane.margin>
                                     <Insets right="40.0" />
                                  </GridPane.margin>
@@ -125,7 +125,7 @@
                                     <Font name="Arial Bold" size="13.0" />
                                  </font>
                               </Label>
-                              <Slider fx:id="gestureThresholdSlider" blockIncrement="5.0" majorTickUnit="5.0" onDragDetected="#gestureThresholdChange" showTickLabels="true" showTickMarks="true" GridPane.columnIndex="1" GridPane.columnSpan="2">
+                              <Slider fx:id="gestureThresholdSlider" blockIncrement="5.0" majorTickUnit="5.0" showTickLabels="true" showTickMarks="true" GridPane.columnIndex="1" GridPane.columnSpan="2">
                                  <GridPane.margin>
                                     <Insets right="40.0" />
                                  </GridPane.margin>

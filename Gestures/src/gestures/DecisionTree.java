@@ -88,8 +88,12 @@ public class DecisionTree {
     
     public static void create(ArrayList<Gesture> gestureList) throws Exception{
         root = null;
-        System.out.println("Creating decision tree with:" + gestureList);
+//        System.out.println("Creating decision tree with:" + gestureList);
         build(root, gestureList);
+    }
+    
+    public static void setGestureFoundThreshold(int threshold) {
+        gestureFoundThreshold = Math.min(Math.max(threshold, 0), 100);
     }
     
     private static DecisionTree.Attribute determineBestAttribute(ArrayList<Gesture> gestureList, ArrayList<DecisionTree.Attribute> usedAttributes) throws Exception{

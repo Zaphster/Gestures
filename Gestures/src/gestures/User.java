@@ -26,6 +26,7 @@ public class User implements JSONWritableReadable {
     private static Event userRemovedGesture = new Event(Event.TYPE.USER_REMOVED_GESTURE);
     private static Event userMappedGestureToCommand = new Event(Event.TYPE.USER_MAPPED_GESTURE_TO_COMMAND);
     private static Event userRemovedGestureFromCommand = new Event(Event.TYPE.USER_REMOVED_GESTURE_FROM_COMMAND);
+    private UserSettings settings = new UserSettings();
     
     public User(){
         
@@ -157,6 +158,38 @@ public class User implements JSONWritableReadable {
     public HashMap<Command, Gesture> getCommandsAndGestures(){
         return commandToGesture;
     }
+    
+    public UserSettings getSettings() {
+        return settings;
+    }
+    
+    public int getGestureFoundThreshold() {
+        return settings.getGestureFoundThreshold();
+    }
+    
+    public int getMouseClickDelay() {
+        return settings.getMouseClickDelay();
+    }
+    
+    public boolean getUseZAxis() {
+        return settings.getUseZAxis();
+    }
+    
+    public int getKeyPressDelay() {
+        return settings.getKeyPressDelay();
+    }
+    
+    public int getMouseMovementDelay() {
+        return settings.getMouseMovementDelay();
+    }
+    
+    public float getPadSensitivity() {
+        return settings.getPadSensitivity();
+    }
+    
+    public void saveSettings(UserSettings settings) {
+        this.settings = settings;
+    }
 
     @Override
     public String makeJSONString() {
@@ -190,6 +223,7 @@ public class User implements JSONWritableReadable {
         });
         obj.put("commandToGestureName", commandToGestureName);
         obj.put("name", this.name);
+        obj.put("settings", settings.toJSONObject());
         return obj;
     }
 
@@ -221,8 +255,8 @@ public class User implements JSONWritableReadable {
             } catch (Exception ex) {
                 Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
             }
-//                commandToGesture.put(Command.valueOf(command.toString()), gestureToMap);
         });
+        this.settings.makeSelfFromJSONObject((JSONObject)jsonObject.get("settings"));
         this.name = jsonObject.get("name").toString();
     }
 }
