@@ -39,7 +39,6 @@ import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.util.Callback;
 import javafx.util.converter.DefaultStringConverter;
 
-
 /**
  * FXML Controller class
  *
