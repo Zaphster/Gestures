@@ -23,18 +23,8 @@ import javafx.stage.Stage;
  * FXML Controller class
  *
  * @author alec
- * 
- * To-Do:
- * 
- * 
- * 
- *  - distance range / radian range
- * 
- *  - gesture capturer
- * 
- *  - user
- * 
  */
+
 public class SettingsPageController implements Initializable {
 
     @FXML
@@ -71,11 +61,9 @@ public class SettingsPageController implements Initializable {
     private ToggleGroup AxisToggle;
 
     private UserSettings settings;
-
     
     /**
      * Initializes the controller class.
-     *
      */
 
     

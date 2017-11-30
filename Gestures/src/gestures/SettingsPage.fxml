@@ -56,7 +56,7 @@
                                     <Font name="Arial Bold" size="13.0" />
                                  </font>
                               </Label>
-                              <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="65.0" prefWidth="327.0" text="Use Z-Axis" textAlignment="CENTER" textFill="#6e6e6e" GridPane.rowIndex="4">
+                              <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="65.0" prefWidth="327.0" text="Mouse Movement Axis" textAlignment="CENTER" textFill="#6e6e6e" GridPane.rowIndex="4">
                                  <font>
                                     <Font name="Arial Bold" size="13.0" />
                                  </font>
