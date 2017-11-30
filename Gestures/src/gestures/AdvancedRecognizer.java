@@ -16,9 +16,15 @@ import com.leapmotion.leap.Vector;
 public class AdvancedRecognizer implements GestureRecognizer{
     Event gestureFound = new Event(Event.TYPE.GESTURE_PERFORMED);
     OSControl osControl = Capstone2_Group5.getOSController();
+    static int interval = 0;
     
     @Override
     public void scan(Frame frame){
+        interval = (interval + 1) % 300;
+        if(interval == 0){
+            System.out.println();
+            System.out.println("----------------");
+        }
         if(frame != null){
             Hand hand = frame.hands().frontmost();
             if(hand != null && hand.isValid()){

@@ -88,7 +88,7 @@ public class DecisionTree {
     
     public static void create(ArrayList<Gesture> gestureList) throws Exception{
         root = null;
-//        System.out.println("Creating decision tree with:" + gestureList);
+        System.out.println("Creating decision tree with:" + gestureList);
         build(root, gestureList);
     }
     

@@ -51,7 +51,7 @@ public class DecisionTreeViewer {
     
     public static void start(){
         if(true){
-            return;
+//            return;
         }
         if (scene == null){
             scene = new Scene(root, sceneSize.x, sceneSize.y);

@@ -238,7 +238,7 @@ public class User implements JSONWritableReadable {
             });
         }
         JSONObject commandToGestureName = (JSONObject)jsonObject.get("commandToGestureName");
-        commandToGestureName.forEach((command, gestureName) -> {
+        commandToGestureName.forEach((commandObj, gestureName) -> {
             Gesture gestureToMap = null;
             for(Gesture gesture : gestures){
                 if(gestureName != null && gesture.name.equals(gestureName.toString())){
@@ -247,7 +247,10 @@ public class User implements JSONWritableReadable {
                 }
             }
             try {
-                this.mapCommandToGesture(Command.valueOf(command.toString()), gestureToMap);
+                Command command = Command.valueOf(commandObj.toString());
+                if(command != null) {
+                    this.mapCommandToGesture(command, gestureToMap);
+                }
             } catch (Exception ex) {
                 Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
             }

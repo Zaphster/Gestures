@@ -16,6 +16,8 @@ import java.util.logging.Level;
  */
 public class DecisionTreeNode {
 //    private class 
+    private String trueBool = "true";
+    private String falseBool = "false";
     private HashMap<Object, DecisionTreeNode> attributeValueToOutcome;
     
     private DecisionTree.Attribute attribute;
@@ -70,6 +72,15 @@ public class DecisionTreeNode {
                 if(!value.getClass().getName().equals(Boolean.class.getName())){
                    throw new Exception("Attribute " + attribute + " expects a boolean value"); 
                 }
+                Boolean boolVal = (Boolean)value;
+                if(attributeValueToOutcome == null){
+                    attributeValueToOutcome = new HashMap<>();
+                }
+                if(boolVal){
+                    attributeValueToOutcome.put(this.trueBool, node);
+                } else {
+                    attributeValueToOutcome.put(this.falseBool, node);
+                }
                 break;
             case PALM_NORMAL:
             case INDEX_DIRECTION:
@@ -102,12 +113,12 @@ public class DecisionTreeNode {
                 if(!value.getClass().getName().equals(GestureVector.class.getName())){
                     throw new Exception("Attribute " + attribute + " expects a GestureVector");
                 }
+                if(attributeValueToOutcome == null){
+                    attributeValueToOutcome = new HashMap<>();
+                }
+                attributeValueToOutcome.put(value, node);
                 break;
         }
-        if(attributeValueToOutcome == null){
-            attributeValueToOutcome = new HashMap<>();
-        }
-        attributeValueToOutcome.put(value, node);
     }
     
     public void setUsedAttributes(ArrayList<DecisionTree.Attribute> attributes){
@@ -135,7 +146,14 @@ public class DecisionTreeNode {
                 if(!value.getClass().getName().equals(Boolean.class.getName())){
                     throw new Exception("Attribute " + attribute + " must be given a boolean to be compared against");
                 }
-                nodeList.put(attributeValueToOutcome.get(value), 100.0);
+                Boolean boolVal = (Boolean)value;
+                if(boolVal){
+                    nodeList.put(attributeValueToOutcome.get(this.trueBool), 100.0);
+                    nodeList.put(attributeValueToOutcome.get(this.falseBool), 0.0);
+                } else {
+                    nodeList.put(attributeValueToOutcome.get(this.falseBool), 100.0);
+                    nodeList.put(attributeValueToOutcome.get(this.trueBool), 0.0);
+                }
                 break;
             case PALM_NORMAL:
             case INDEX_DIRECTION:
@@ -172,16 +190,24 @@ public class DecisionTreeNode {
                 attributeValueToOutcome.forEach((compare, node)-> {
                     GestureVector compareTo = (GestureVector)compare;
                     try{
-                        float percentageDifference = compareTo.getPercentageDirectionComparison((Vector)value);
-                        nodeList.put(node, (double)percentageDifference);
+                        float percentageSimilar = compareTo.getSimilarity((Vector)value);
+//                        System.out.println("Percentage similar: " + percentageSimilar);
+                        
+                        nodeList.put(node, (double)percentageSimilar);
                     } catch (Exception e) {
                         Logger.getLogger(DecisionTreeNode.class.getName()).log(Level.SEVERE, null, e);
                     }
-
                 });
                 break;
         }
+        show("nodeList" + nodeList.toString());
         return nodeList;
+    }
+    
+    private void show(String message){
+        if(AdvancedRecognizer.interval == 0){
+            System.out.println(message);
+        }
     }
     
     private void updateVisited(Boolean visited){

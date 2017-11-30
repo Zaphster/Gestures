@@ -46,7 +46,7 @@ public class GestureVector implements JSONWritableReadable{
         return Double.parseDouble(Float.toString(value));
     }
     
-    public float getPercentageDirectionComparison(Vector vector) throws Exception{
+    public float getSimilarity(Vector vector) throws Exception{
         checkVectorIsSet();
         float angleBetween = thisVector.angleTo(vector);
         return (float)((GestureVector.maxAngleTo - angleBetween) * 100 / GestureVector.maxAngleTo);
@@ -58,12 +58,12 @@ public class GestureVector implements JSONWritableReadable{
         }
     }
     
-    public float getPercentageDirectionComparison(Double x, Double y, Double z) throws Exception{
+    public float getSimilarity(Double x, Double y, Double z) throws Exception{
         Vector toCompare = new Vector();
         toCompare.setX(x.floatValue());
         toCompare.setY(y.floatValue());
         toCompare.setZ(z.floatValue());
-        return getPercentageDirectionComparison(toCompare);
+        return GestureVector.this.getSimilarity(toCompare);
     }
     
     private void setVector(Double x, Double y, Double z) throws Exception{

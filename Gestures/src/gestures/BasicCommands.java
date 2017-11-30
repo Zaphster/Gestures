@@ -8,7 +8,8 @@ package gestures;
 import java.awt.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
-import javafx.animation.Timeline;
+import java.sql.Time;
+import java.util.Date;
 
 /**
  *
@@ -34,6 +35,7 @@ public class BasicCommands implements OSControl{
     private int autoDelay = 0;
     private int keyPressDelay = 50;
     private int mouseClickDelay = 50;
+    private Date timeOfLastClick;
     
     private int screenHeight;
     private int screenWidth;
@@ -64,7 +66,7 @@ public class BasicCommands implements OSControl{
         
         try{
             robot = new Robot(screenDev);
-            smoother = new MouseMoveSmoother(robot);
+            smoother = new MouseMoveSmoother(robot); //secondary robot purely for mouse movement
             robot.setAutoDelay(this.autoDelay);    
             robot.setAutoWaitForIdle(false);
             
@@ -83,27 +85,31 @@ public class BasicCommands implements OSControl{
     }
     
     private void click(int button){
-        
-        robot.mousePress(button);
-        robot.delay(mouseClickDelay);
-        robot.mouseRelease(button);
-        robot.delay(mouseClickDelay);
-        
+        Date now = new Date();
+        if(timeOfLastClick == null || timeOfLastClick.getTime() + mouseClickDelay < now.getTime()){
+            robot.mousePress(button);
+            robot.mouseRelease(button);
+            timeOfLastClick = now;
+        }
+    }
+    
+    private void doubleClick(int button) {
+        Date now = new Date();
+        if(timeOfLastClick == null || timeOfLastClick.getTime() + mouseClickDelay < now.getTime()) {
+            robot.mousePress(button);
+            robot.mouseRelease(button);
+            robot.mousePress(button);
+            robot.mouseRelease(button);
+            timeOfLastClick = now;
+        }
     }
     
     private void holdClick(int button){
-    
         robot.mousePress(button);
-        robot.delay(mouseClickDelay);
-
-        
     }
     
     private void releaseClick(int button){
-    
         robot.mouseRelease(button);
-        robot.delay(mouseClickDelay);
-    
     }
     
     private void primaryClick(){
@@ -131,25 +137,18 @@ public class BasicCommands implements OSControl{
     }
     
     private void pressKey(int keycode){
-        
         this.holdKey(keycode);
         this.releaseKey(keycode);
-        
     }
     
     private void holdKey(int keycode){
-        
         robot.keyPress(keycode);
         robot.delay(keyPressDelay);
-        
-    
     }
     
     private void releaseKey(int keycode){
-    
         robot.keyRelease(keycode);
         robot.delay(keyPressDelay);
-        
     }
     
     private void smoothMove(int x, int y){
@@ -157,40 +156,30 @@ public class BasicCommands implements OSControl{
     }
     
     private double getPadSensitivity(){
-        double hypotenuse;
-        if(useZAxis) {
-            hypotenuse = hypotenuse(this.handDeltaX, this.handDeltaZ);
-        } else {
-            hypotenuse = hypotenuse(this.handDeltaX, this.handDeltaY);
-        }
-//        System.out.println("hypotenuse: " + hypotenuse);
-        return hypotenuse * padSensitivity_coefficient;
+        return padSensitivity_coefficient;
     }
     
-    private double distance(int x1, int y1, int x2, int y2){
-        int xDist = x2 - x1;
-        int yDist = y2 - y1;
-        return hypotenuse(xDist, yDist);
-    }
-    
-    private double hypotenuse(int x, int y){
-        int squared = (x * x) + (y * y);
-        double sqrt = Math.sqrt(squared);
-//        System.out.println("x: " + x + ", y: " + y + ", x^2 + y^2: " + squared + ", sqrt: " + sqrt);
-        return sqrt;
+    private double distanceModified(int x, int y) {
+        double distance = Math.min(15, Math.sqrt((x * x) + (y * y)));
+        //map distance to a function that at 0 puts it at 2, and at 15 keeps it at 15
+        // y = mx + b
+        distance = distance * (13.0/15.0) + 2;
+        return distance;
     }
     
     private void moveStandard(){
         double padSensitivity = getPadSensitivity();
-        int moveAmountX = (int)Math.round(this.handDeltaX * padSensitivity / 100);
-        int moveAmountY = (int)Math.round(this.handDeltaY * padSensitivity / 100);
-        int moveAmountZ = (int)Math.round(this.handDeltaZ * padSensitivity / 100);
-        
         Point nextMousePosition = getMousePosition();
         if(useZAxis == true){
+            double distance = distanceModified(handDeltaX, handDeltaZ);
+            int moveAmountX = (int)Math.round(this.handDeltaX * distance * padSensitivity / 100);
+            int moveAmountZ = (int)Math.round(this.handDeltaZ * distance * padSensitivity / 100);
             nextMousePosition.x += moveAmountX;
             nextMousePosition.y += moveAmountZ;
         }else{
+            double distance = distanceModified(handDeltaX, handDeltaY);
+            int moveAmountX = (int)Math.round(this.handDeltaX * distance * padSensitivity / 100);
+            int moveAmountY = (int)Math.round(this.handDeltaY * distance * padSensitivity / 100);
             nextMousePosition.x += moveAmountX;
             nextMousePosition.y -= moveAmountY;
         }
@@ -198,16 +187,13 @@ public class BasicCommands implements OSControl{
     }
     
     public void mouseScroll(){
-        
-        int z_pos = this.handCurrentZ;
-        int y_pos = this.handCurrentY;
-        
+        int z_pos = this.handDeltaZ;
+        int y_pos = this.handDeltaY;
         if(useZAxis == true){
             robot.mouseWheel(z_pos);
         }else{
             robot.mouseWheel((y_pos*(-1)));
         }
-        
     }
 
     @Override
@@ -232,6 +218,8 @@ public class BasicCommands implements OSControl{
             case MOUSE_SECONDARY_CLICK:
                 this.secondaryClick();
                 break;
+            case MOUSE_PRIMARY_DOUBLE_CLICK:
+                this.doubleClick(InputEvent.BUTTON1_MASK);
             case MOUSE_SCROLL:
                 this.mouseScroll();
                 break;
@@ -259,9 +247,6 @@ public class BasicCommands implements OSControl{
             case SHIFT_RELEASE:
                 this.releaseKey(KeyEvent.VK_SHIFT);
                 break;
-            case SHIFT_PRESS:
-                this.pressKey(KeyEvent.VK_SHIFT);
-                break;
             case TAB_HELD_DOWN:
                 this.holdKey(KeyEvent.VK_TAB);
                 break;
@@ -272,59 +257,55 @@ public class BasicCommands implements OSControl{
                 this.pressKey(KeyEvent.VK_TAB);
                 break;
             case CAPSLOCK_PRESS:
-                this.holdKey(KeyEvent.VK_CAPS_LOCK);
+                this.pressKey(KeyEvent.VK_CAPS_LOCK);
                 break;
             case F12_PRESS:
-                this.holdKey(KeyEvent.VK_F12);
+                this.pressKey(KeyEvent.VK_F12);
                 break;
             case F11_PRESS:
-                this.holdKey(KeyEvent.VK_F11);
+                this.pressKey(KeyEvent.VK_F11);
                 break;
             case F10_PRESS:
-                this.holdKey(KeyEvent.VK_F10);
+                this.pressKey(KeyEvent.VK_F10);
                 break;
             case F9_PRESS:
-                this.holdKey(KeyEvent.VK_F9);
+                this.pressKey(KeyEvent.VK_F9);
                 break;
             case F8_PRESS:
-                this.holdKey(KeyEvent.VK_F8);
+                this.pressKey(KeyEvent.VK_F8);
                 break;
             case F7_PRESS:
-                this.holdKey(KeyEvent.VK_F7);
+                this.pressKey(KeyEvent.VK_F7);
                 break;
             case F6_PRESS:
-                this.holdKey(KeyEvent.VK_F6);
+                this.pressKey(KeyEvent.VK_F6);
                 break;
             case F5_PRESS:
-                this.holdKey(KeyEvent.VK_F5);
+                this.pressKey(KeyEvent.VK_F5);
                 break;
             case F4_PRESS:
-                this.holdKey(KeyEvent.VK_F4);
+                this.pressKey(KeyEvent.VK_F4);
                 break;
             case F3_PRESS:
-                this.holdKey(KeyEvent.VK_F3);
+                this.pressKey(KeyEvent.VK_F3);
                 break;
             case F2_PRESS:
-                this.holdKey(KeyEvent.VK_F2);
+                this.pressKey(KeyEvent.VK_F2);
                 break;
             case F1_PRESS:
-                this.holdKey(KeyEvent.VK_F1);
+                this.pressKey(KeyEvent.VK_F1);
                 break;
         }
     }
     
     public void useAutoDelay(){
-        
         this.robot.setAutoDelay(this.autoDelay);    
         this.robot.setAutoWaitForIdle(true);
-        
     }
     
     public void stopAutoDelay(){
-        
         this.robot.setAutoDelay(this.autoDelay);    
-        this.robot.setAutoWaitForIdle(false); 
-        
+        this.robot.setAutoWaitForIdle(false);
     }
     
     @Override
@@ -338,7 +319,6 @@ public class BasicCommands implements OSControl{
             handDeltaY = y - handCurrentY;
             handDeltaZ = z - handCurrentZ;
         }
-        
         handCurrentX = x;
         handCurrentY = y;  
         handCurrentZ = z;

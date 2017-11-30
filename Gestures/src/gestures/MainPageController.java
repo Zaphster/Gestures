@@ -342,6 +342,8 @@ public class MainPageController implements Initializable {
                 showError("Error", "No User Selected", "Create or select a user before managing gestures.");
                 return;
             }
+            
+            LeapService.stop();
             Stage stage = (Stage) gestureManager.getScene().getWindow();
             
             Parent gestureParent = FXMLLoader.load(getClass().getResource("GestureManager.fxml"));
