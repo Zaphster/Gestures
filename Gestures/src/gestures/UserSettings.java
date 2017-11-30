@@ -5,12 +5,11 @@
  */
 package gestures;
 
-    
-
 /**
  *
  * @author alec
  */
+
 public class UserSettings {
     
     private int keyPressDelay = 50;

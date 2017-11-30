@@ -119,7 +119,7 @@ public class MainPageController implements Initializable {
     private void handleNewGesture(ActionEvent event) throws IOException, Exception{
         if(event.getSource() == btnNewGesture){
             if(UserManager.getCurrentUser() == null){
-                showError("Error", "No User Selected", "Create or select a user first.");
+                showError("Error", "No User Selected", "Create or select a user before creating gestures.");
                 return;
             }
             LeapService.stop();
@@ -146,7 +146,8 @@ public class MainPageController implements Initializable {
     private void handleSettingsButton(ActionEvent event) throws IOException, Exception{
 
         if(UserManager.getCurrentUser() == null){
-            throw new Exception("A user profile must be selected before acessing the settings.");
+                showError("Error", "No User Selected", "Create or select a user before managing settings.");
+                return;
         }
         LeapService.stop();
         Stage stage = (Stage) settingsButton.getScene().getWindow();
@@ -342,9 +343,7 @@ public class MainPageController implements Initializable {
             stage.setScene(scene);
             stage.show();
         }  
-    }
-    
-        
+    }   
     
     @FXML
     public void handleUserDelete(ActionEvent event) throws IOException, Exception {

@@ -71,7 +71,7 @@
          <children>
             <Button fx:id="deleteUserBtn" alignment="CENTER_LEFT" mnemonicParsing="false" onAction="#handleUserDelete" text="Delete Current User">
                <HBox.margin>
-                  <Insets right="320.0" />
+                  <Insets left="15.0" right="320.0" />
                </HBox.margin></Button>
 
             <Button fx:id="start" alignment="CENTER_RIGHT" contentDisplay="CENTER" mnemonicParsing="false" onAction="#handleStart" text="Begin Gesture Tracking">
