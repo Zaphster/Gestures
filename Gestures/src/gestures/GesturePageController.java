@@ -104,7 +104,6 @@ public class GesturePageController implements Initializable {
         
             WebView browser = new WebView();
             URL vurl = getClass().getResource("Visualizer.html");
-            System.out.println("URL: " + vurl);
             browser.getEngine().load(vurl.toExternalForm());
             
             visualizerScene.setHeight(510);

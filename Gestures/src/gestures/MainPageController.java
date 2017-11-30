@@ -39,6 +39,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.cell.ComboBoxTableCell;
+import javafx.scene.web.WebView;
 import javafx.util.Callback;
 import javafx.util.converter.DefaultStringConverter;
 
@@ -169,6 +170,8 @@ public class MainPageController implements Initializable {
     
     @FXML
     private void handleStart(ActionEvent event) {
+        start.setDisable(true);
+        stopBtn.setDisable(false);
         LeapService.start(decisionTree);
         DecisionTreeViewer.start();
     }
@@ -227,7 +230,9 @@ public class MainPageController implements Initializable {
             loadCurrentUser();
         } catch (Exception ex) {
             Logger.getLogger(MainPageController.class.getName()).log(Level.SEVERE, null, ex);
-        }   
+        }
+        
+        stopBtn.setDisable(true);
     }
     
     private void setCellFactories(){
@@ -393,6 +398,8 @@ public class MainPageController implements Initializable {
     }
     
     public void handleStopBtn(ActionEvent event){
+        start.setDisable(false);
+        stopBtn.setDisable(true);
         LeapService.stop();
     }
     
@@ -402,6 +409,5 @@ public class MainPageController implements Initializable {
         // do what you have to do
         stage.close();
     }
-    
     
 }

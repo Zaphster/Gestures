@@ -268,33 +268,6 @@ public class BasicCommands implements OSControl{
             case F10_PRESS:
                 this.pressKey(KeyEvent.VK_F10);
                 break;
-            case F9_PRESS:
-                this.pressKey(KeyEvent.VK_F9);
-                break;
-            case F8_PRESS:
-                this.pressKey(KeyEvent.VK_F8);
-                break;
-            case F7_PRESS:
-                this.pressKey(KeyEvent.VK_F7);
-                break;
-            case F6_PRESS:
-                this.pressKey(KeyEvent.VK_F6);
-                break;
-            case F5_PRESS:
-                this.pressKey(KeyEvent.VK_F5);
-                break;
-            case F4_PRESS:
-                this.pressKey(KeyEvent.VK_F4);
-                break;
-            case F3_PRESS:
-                this.pressKey(KeyEvent.VK_F3);
-                break;
-            case F2_PRESS:
-                this.pressKey(KeyEvent.VK_F2);
-                break;
-            case F1_PRESS:
-                this.pressKey(KeyEvent.VK_F1);
-                break;
         }
     }
     
