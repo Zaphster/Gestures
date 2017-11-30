@@ -119,7 +119,8 @@ public class MainPageController implements Initializable {
     private void handleNewGesture(ActionEvent event) throws IOException, Exception{
         if(event.getSource() == btnNewGesture){
             if(UserManager.getCurrentUser() == null){
-                throw new Exception("A user profile must be selected before creating a new gesture.");
+                showError("Error", "No User Selected", "Create or select a user first.");
+                return;
             }
             LeapService.stop();
             Stage stage = (Stage) btnNewGesture.getScene().getWindow();
@@ -130,6 +131,15 @@ public class MainPageController implements Initializable {
             stage.setScene(scene);
             stage.show();
         }  
+    }
+    
+    private void showError(String title, String header, String content){
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(header);
+        alert.setContentText(content);
+        alert.showAndWait();
+        return;
     }
     
     @FXML
@@ -181,11 +191,7 @@ public class MainPageController implements Initializable {
             UserManager.setCurrentUser(selectedUser);
        }catch (Exception ex) {
             Logger.getLogger(MainPageController.class.getName()).log(Level.SEVERE, null, ex);
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error");
-            alert.setHeaderText("Create New Profile Error");
-            alert.setContentText(ex.getMessage());
-            alert.showAndWait();
+            showError("Error", "Create New Profile Error", ex.getMessage());
         }
     }
     
@@ -325,7 +331,8 @@ public class MainPageController implements Initializable {
     private void handleGestureManager(ActionEvent event) throws IOException, Exception{
         if(event.getSource() == gestureManager){
             if(UserManager.getCurrentUser() == null){
-                throw new Exception("A user profile must be selected before creating a new gesture.");
+                showError("Error", "No User Selected", "Create or select a user before managing gestures.");
+                return;
             }
             Stage stage = (Stage) gestureManager.getScene().getWindow();
             
@@ -342,6 +349,10 @@ public class MainPageController implements Initializable {
     @FXML
     public void handleUserDelete(ActionEvent event) throws IOException, Exception {
         String userToDelete = UserManager.getCurrentUsername();
+        if(UserManager.getCurrentUser() == null) {
+            showError("Error", "No user selected", "Select a user first");
+            return;
+        }
         try {
             Alert alert = new Alert(AlertType.CONFIRMATION);
             alert.setTitle("Delete User Confirmation");
@@ -369,11 +380,7 @@ public class MainPageController implements Initializable {
             }
         }catch (Exception ex){
             Logger.getLogger(GestureManagerController.class.getName()).log(Level.SEVERE, null, ex);
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error");
-            alert.setHeaderText("Delete Current User Error");
-            alert.setContentText(ex.getMessage());
-            alert.showAndWait();
+            showError("Error", "Delete current user error", ex.getMessage());
         }
     }
     
