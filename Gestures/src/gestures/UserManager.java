@@ -360,11 +360,6 @@ public class UserManager implements JSONWritableReadable {
         return manager._getKeyPressDelay();
     }
     
-    public static int getMouseMovementDelay() {
-        initializeManager();
-        return manager._getMouseMovementDelay();
-    }
-    
     public static float getPadSensitivity() {
         initializeManager();
         return manager._getPadSensitivity();
@@ -384,10 +379,6 @@ public class UserManager implements JSONWritableReadable {
     
     private int _getKeyPressDelay() {
         return currentUser.getKeyPressDelay();
-    }
-    
-    private int _getMouseMovementDelay() {
-        return currentUser.getMouseMovementDelay();
     }
     
     private float _getPadSensitivity() {
@@ -487,7 +478,6 @@ public class UserManager implements JSONWritableReadable {
     }
     
     private static void storeUser(User user) throws Exception{
-//        System.out.println("storing user " + user.getName());
         createDirectory();
         String filepath = baseFilepath + user.getName() + ".bin";
         String toWrite = user.makeJSONString();

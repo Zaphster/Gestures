@@ -18,7 +18,6 @@ public class UserSettings implements JSONWritableReadable{
     
     private int keyPressDelay = 50;
     private int mouseClickDelay = 50;
-    private int mouseMovementDelay = 0;
     private float padSensitivity_coefficient = 500;
     private boolean useZAxis = false;
     private int gestureFoundThreshold = 50;
@@ -31,12 +30,8 @@ public class UserSettings implements JSONWritableReadable{
     
         keyPressDelay = 50;
         mouseClickDelay = 50;
-        mouseMovementDelay = 0;
-        
         padSensitivity_coefficient = 500;
-        
         useZAxis = false;
-    
         gestureFoundThreshold = 50;
     }
     
@@ -49,19 +44,11 @@ public class UserSettings implements JSONWritableReadable{
     }
     
     public void setMouseClickDelay(int delay){
-        this.keyPressDelay = delay;
+        this.mouseClickDelay = delay;
     }
     
     public int getMouseClickDelay(){
-        return this.keyPressDelay;
-    }
-    
-    public void setMouseMovementDelay(int delay){
-        this.mouseMovementDelay = delay;
-    }
-    
-    public int getMouseMovementDelay(){
-        return this.mouseMovementDelay;
+        return this.mouseClickDelay;
     }
     
     public void setPadSensitivity(float sensitivity){
@@ -99,7 +86,6 @@ public class UserSettings implements JSONWritableReadable{
         obj.put("keyPressDelay", this.keyPressDelay);
         obj.put("gestureFoundThreshold", this.gestureFoundThreshold);
         obj.put("mouseClickDelay", this.mouseClickDelay);
-        obj.put("mouseMovementDelay", this.mouseMovementDelay);
         obj.put("padSensitivity_coefficient", this.padSensitivity_coefficient);
         obj.put("useZAxis", this.useZAxis);
         return obj;
@@ -120,7 +106,6 @@ public class UserSettings implements JSONWritableReadable{
         this.setGestureFoundThreshold(Integer.parseInt(jsonObject.get("gestureFoundThreshold").toString()));
         this.setKeyPressDelay(Integer.parseInt(jsonObject.get("keyPressDelay").toString()));
         this.setMouseClickDelay(Integer.parseInt(jsonObject.get("mouseClickDelay").toString()));
-        this.setMouseMovementDelay(Integer.parseInt(jsonObject.get("mouseMovementDelay").toString()));
         this.setPadSensitivity(Float.parseFloat(jsonObject.get("padSensitivity_coefficient").toString()));
     }
 }

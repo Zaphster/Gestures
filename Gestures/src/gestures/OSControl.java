@@ -16,7 +16,6 @@ public interface OSControl {
     public void moveMouse();
     public void setMouseClickDelay(int delay);
     public void setKeyPressDelay(int delay);
-    public void setMouseMoveDelay(int delay);
     public void setPadSensitivityCoefficient(float coefficient);
     public void setUseZAxis(boolean useZAxis);
 }

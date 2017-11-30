@@ -26,9 +26,6 @@ import javafx.stage.Stage;
  */
 
 public class SettingsPageController implements Initializable {
-
-    @FXML
-    private Slider movementDelaySlider;
      
     @FXML
     private Slider clickDelaySlider;
@@ -123,7 +120,6 @@ public class SettingsPageController implements Initializable {
     }
     
     private void saveSettings(){
-        settings.setMouseMovementDelay((int)Math.floor(this.movementDelaySlider.getValue()));
         settings.setMouseClickDelay((int)Math.floor(this.clickDelaySlider.getValue()));
         settings.setPadSensitivity((float)this.mouseSensitivitySlider.getValue());
         settings.setKeyPressDelay((int)Math.floor(this.keyDelaySlider.getValue()));
@@ -138,14 +134,12 @@ public class SettingsPageController implements Initializable {
         UserManager.saveSettings(settings);
         Capstone2_Group5.getOSController().setMouseClickDelay(settings.getMouseClickDelay());
         Capstone2_Group5.getOSController().setKeyPressDelay(settings.getKeyPressDelay());
-        Capstone2_Group5.getOSController().setMouseMoveDelay(settings.getMouseMovementDelay());
         Capstone2_Group5.getOSController().setPadSensitivityCoefficient(settings.getPadSensitivity());
         Capstone2_Group5.getOSController().setUseZAxis(settings.getUseZAxis());
         DecisionTree.setGestureFoundThreshold(settings.getGestureFoundThreshold());
     }
     
     private void showCurrentSettings(){
-        this.movementDelaySlider.setValue((double)settings.getMouseMovementDelay());
         this.clickDelaySlider.setValue((double)settings.getMouseClickDelay());
         this.mouseSensitivitySlider.setValue((double)settings.getPadSensitivity());
         this.keyDelaySlider.setValue((double)settings.getKeyPressDelay());
@@ -168,10 +162,7 @@ public class SettingsPageController implements Initializable {
        
        showCurrentSettings();
        applyButton.setDisable(true);
-       
-       movementDelaySlider.valueProperty().addListener((ObservableValue<? extends Number> ov, Number old_val, Number new_val) -> {
-           enableApplyButton();
-       });
+
        clickDelaySlider.valueProperty().addListener((ObservableValue<? extends Number> ov, Number old_val, Number new_val) -> {
            enableApplyButton();
        });

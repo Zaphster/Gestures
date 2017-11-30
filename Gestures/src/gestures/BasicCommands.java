@@ -33,7 +33,6 @@ public class BasicCommands implements OSControl{
     private int autoDelay = 0;
     private int keyPressDelay = 50;
     private int mouseClickDelay = 50;
-    private int mouseMovementDelay = 0;
     
     private int screenHeight;
     private int screenWidth;
@@ -316,11 +315,6 @@ public class BasicCommands implements OSControl{
     @Override
     public void setKeyPressDelay(int delay) {
         this.keyPressDelay = delay;
-    }
-
-    @Override
-    public void setMouseMoveDelay(int delay) {
-        this.mouseMovementDelay = delay;
     }
 
     @Override

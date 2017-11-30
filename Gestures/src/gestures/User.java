@@ -179,10 +179,6 @@ public class User implements JSONWritableReadable {
         return settings.getKeyPressDelay();
     }
     
-    public int getMouseMovementDelay() {
-        return settings.getMouseMovementDelay();
-    }
-    
     public float getPadSensitivity() {
         return settings.getPadSensitivity();
     }
