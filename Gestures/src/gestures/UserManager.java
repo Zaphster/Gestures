@@ -147,6 +147,7 @@ public class UserManager implements JSONWritableReadable {
         }
         currentUser = user;
         currentUserName = currentUser.getName();
+        this._setProgramSettings(currentUser.getSettings());
         UserManager.store();
         _readyTree();
         switchedUser.addDetail("user", currentUser);
@@ -338,6 +339,14 @@ public class UserManager implements JSONWritableReadable {
         } catch (Exception e) {
             Logger.getLogger(UserManager.class.getName()).log(Level.SEVERE, null, e);
         }
+    }
+    
+    private void _setProgramSettings(UserSettings settings){
+        Capstone2_Group5.getOSController().setMouseClickDelay(settings.getMouseClickDelay());
+        Capstone2_Group5.getOSController().setKeyPressDelay(settings.getKeyPressDelay());
+        Capstone2_Group5.getOSController().setPadSensitivityCoefficient(settings.getPadSensitivity());
+        Capstone2_Group5.getOSController().setUseZAxis(settings.getUseZAxis());
+        DecisionTree.setGestureFoundThreshold(settings.getGestureFoundThreshold());
     }
     
     public static int getGestureFoundThreshold() {

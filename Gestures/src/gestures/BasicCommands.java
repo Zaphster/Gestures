@@ -36,6 +36,7 @@ public class BasicCommands implements OSControl{
     private int keyPressDelay = 50;
     private int mouseClickDelay = 50;
     private Date timeOfLastClick;
+    private Date timeOfLastKeyPress;
     
     private int screenHeight;
     private int screenWidth;
@@ -137,8 +138,13 @@ public class BasicCommands implements OSControl{
     }
     
     private void pressKey(int keycode){
-        this.holdKey(keycode);
-        this.releaseKey(keycode);
+        Date now = new Date();
+        if(timeOfLastKeyPress == null || timeOfLastKeyPress.getTime() + keyPressDelay < now.getTime()){
+            robot.keyPress(keycode);
+            robot.keyRelease(keycode);
+//            this.releaseKey(keycode);
+            timeOfLastKeyPress = now;
+        }
     }
     
     private void holdKey(int keycode){
@@ -220,6 +226,7 @@ public class BasicCommands implements OSControl{
                 break;
             case MOUSE_PRIMARY_DOUBLE_CLICK:
                 this.doubleClick(InputEvent.BUTTON1_MASK);
+                break;
             case MOUSE_SCROLL:
                 this.mouseScroll();
                 break;
